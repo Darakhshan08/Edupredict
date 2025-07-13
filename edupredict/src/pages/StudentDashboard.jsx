@@ -1,0 +1,363 @@
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  UsersIcon,
+  CheckCircle2Icon,
+  XCircleIcon,
+  BarChart2Icon,
+} from "lucide-react";
+const StudentDashboard = () => {
+  const containerVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+  };
+  const itemVariants = {
+    hidden: {
+      y: 20,
+      opacity: 0,
+    },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 24,
+      },
+    },
+  };
+  const courses = ["Mathematics", "Science", "English"];
+  const assignments = ["Math Quiz", "Science Report", "English Essay"];
+  return (
+    <motion.div
+      className="p-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={itemVariants}>
+        <h1 className="text-2xl font-bold text-gray-800 mb-1">
+          Student Dashboard
+        </h1>
+        <p className="mb-6 text-gray-600">Welcome to your student dashboard!</p>
+      </motion.div>
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
+        }}
+      >
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-green-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <UsersIcon size={28} className="text-green-600" />
+            <div className="text-sm text-gray-600">Total Students</div>
+          </div>
+          <div className="text-3xl font-extrabold text-green-600">248</div>
+        </motion.div>
+
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-blue-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <CheckCircle2Icon size={28} className="text-blue-600" />
+            <div className="text-sm text-gray-600">Present Today</div>
+          </div>
+          <div className="text-3xl font-extrabold text-blue-600">215</div>
+        </motion.div>
+
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-red-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <XCircleIcon size={28} className="text-red-600" />
+            <div className="text-sm text-gray-600">Absent Today</div>
+          </div>
+          <div className="text-3xl font-extrabold text-red-600">33</div>
+        </motion.div>
+
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-yellow-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <BarChart2Icon size={28} className="text-yellow-600" />
+            <div className="text-sm text-gray-600">Attendance Rate</div>
+          </div>
+          <div className="text-3xl font-extrabold text-yellow-600">87%</div>
+        </motion.div>
+      </motion.div>
+      <motion.div
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+        variants={containerVariants}
+      >
+        <motion.div
+          className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+          variants={itemVariants}
+        >
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <span className="inline-block w-3 h-3 bg-indigo-500 rounded-full mr-2"></span>
+            Your Courses
+          </h2>
+          <ul className="divide-y space-y-1">
+            {courses.map((course, i) => (
+              <motion.li
+                key={i}
+                className="py-3 flex justify-between items-center"
+                initial={{
+                  opacity: 0,
+                  x: -20,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                transition={{
+                  delay: i * 0.1,
+                }}
+                whileHover={{
+                  x: 5,
+                  transition: {
+                    duration: 0.2,
+                  },
+                }}
+              >
+                <span className="font-medium">{course}</span>
+                <div className="flex items-center">
+                  <div className="w-24 bg-gray-200 rounded-full h-2.5 mr-3">
+                    <motion.div
+                      className="bg-indigo-600 h-2.5 rounded-full"
+                      initial={{
+                        width: 0,
+                      }}
+                      animate={{
+                        width: `${Math.floor(Math.random() * 100)}%`,
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        delay: i * 0.2,
+                        ease: "easeOut",
+                      }}
+                    ></motion.div>
+                  </div>
+                  <motion.button
+                    className="px-3 py-1 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-sm transition-colors duration-200"
+                    whileHover={{
+                      scale: 1.05,
+                    }}
+                    whileTap={{
+                      scale: 0.95,
+                    }}
+                  >
+                    View
+                  </motion.button>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+          <motion.div
+            className="mt-4 pt-4 border-t"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            transition={{
+              delay: 0.5,
+            }}
+          >
+            <motion.button
+              className="w-full px-4 py-2 bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors duration-200 text-sm font-medium"
+              whileHover={{
+                scale: 1.01,
+              }}
+              whileTap={{
+                scale: 0.99,
+              }}
+            >
+              View All Courses
+            </motion.button>
+          </motion.div>
+        </motion.div>
+        <motion.div
+          className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+          variants={itemVariants}
+        >
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <span className="inline-block w-3 h-3 bg-amber-500 rounded-full mr-2"></span>
+            Upcoming Assignments
+          </h2>
+          <ul className="divide-y space-y-1">
+            {assignments.map((assignment, i) => (
+              <motion.li
+                key={i}
+                className="py-3 flex justify-between items-center"
+                initial={{
+                  opacity: 0,
+                  x: -20,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                transition={{
+                  delay: i * 0.1,
+                }}
+                whileHover={{
+                  x: 5,
+                  transition: {
+                    duration: 0.2,
+                  },
+                }}
+              >
+                <div className="flex items-center">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      i === 0
+                        ? "bg-red-500"
+                        : i === 1
+                        ? "bg-amber-500"
+                        : "bg-green-500"
+                    } mr-2`}
+                  ></div>
+                  <span className="font-medium">{assignment}</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 mr-3">
+                    Due in {i + 1} days
+                  </span>
+                  <motion.button
+                    className="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-md hover:bg-amber-200 transition-colors duration-200"
+                    whileHover={{
+                      scale: 1.05,
+                    }}
+                    whileTap={{
+                      scale: 0.95,
+                    }}
+                  >
+                    Start
+                  </motion.button>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+          <motion.div
+            className="mt-4 pt-4 border-t"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            transition={{
+              delay: 0.5,
+            }}
+          >
+            <motion.button
+              className="w-full px-4 py-2 bg-amber-50 text-amber-600 rounded-md hover:bg-amber-100 transition-colors duration-200 text-sm font-medium"
+              whileHover={{
+                scale: 1.01,
+              }}
+              whileTap={{
+                scale: 0.99,
+              }}
+            >
+              View All Assignments
+            </motion.button>
+          </motion.div>
+        </motion.div>
+        <motion.div
+          className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 lg:col-span-2"
+          variants={itemVariants}
+        >
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full mr-2"></span>
+            Your Progress
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <motion.div
+              className="p-4 bg-emerald-50 rounded-lg border border-emerald-100"
+              whileHover={{
+                y: -5,
+                transition: {
+                  duration: 0.2,
+                },
+              }}
+            >
+              <div className="text-emerald-800 font-semibold mb-1">
+                Overall Grade
+              </div>
+              <div className="text-3xl font-bold text-emerald-600">A-</div>
+              <div className="text-xs text-emerald-700 mt-1">
+                Top 15% of class
+              </div>
+            </motion.div>
+            <motion.div
+              className="p-4 bg-blue-50 rounded-lg border border-blue-100"
+              whileHover={{
+                y: -5,
+                transition: {
+                  duration: 0.2,
+                },
+              }}
+            >
+              <div className="text-blue-800 font-semibold mb-1">Attendance</div>
+              <div className="text-3xl font-bold text-blue-600">95%</div>
+              <div className="text-xs text-blue-700 mt-1">Last 30 days</div>
+            </motion.div>
+            <motion.div
+              className="p-4 bg-purple-50 rounded-lg border border-purple-100"
+              whileHover={{
+                y: -5,
+                transition: {
+                  duration: 0.2,
+                },
+              }}
+            >
+              <div className="text-purple-800 font-semibold mb-1">
+                Completed
+              </div>
+              <div className="text-3xl font-bold text-purple-600">24/30</div>
+              <div className="text-xs text-purple-700 mt-1">
+                Assignments this term
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+};
+export default StudentDashboard;
