@@ -7,6 +7,7 @@ const seedAdmin = require("./seeders/adminSeeder");
 const authroutes = require("./routes/authRoutes");
 const { protect } = require("./middleware/authMiddleware");
 const Userroute = require("./routes/userRoutes");
+const seedFeedback = require("./seeders/feebackSeeder");
 
 const app = express();
 
@@ -41,7 +42,8 @@ app.get("/api/teacher", protect(["teacher"]), (req, res) => {
 });
 
 connectDB().then(() => {
-  seedAdmin();
+   seedAdmin();
+   seedFeedback();
   app.listen(PORT, console.log(`Backend is running on the ${PORT}`));
 });
 
