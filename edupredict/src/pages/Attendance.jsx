@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   UsersIcon,
@@ -9,8 +9,31 @@ import {
 import { Overview } from '../components/Tabs/Overview';
 import { Courses } from '../components/Tabs/Courses';
 import { Student } from '../components/Tabs/Student';
+import { attendance_statistics } from '../Api/internal';
+import Loader from '../components/Custom/Loader';
 const Attendance = () => {
   const [activeTab, setActiveTab] = useState('attendance');
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const fetchData = async () => {
+    try {
+      const response = await attendance_statistics();
+      if (response.status == 200) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   const containerVariants = {
     hidden: {
@@ -39,38 +62,7 @@ const Attendance = () => {
       }
     }
   };
-   // Mock student data for the Student tab
-   const studentData = [{
-    student_id: "S001",
-    avg_attendance: 92,
-    present_count: 46,
-    late_count: 3,
-    absent_count: 1
-  }, {
-    student_id: "S002",
-    avg_attendance: 78,
-    present_count: 39,
-    late_count: 6,
-    absent_count: 5
-  }, {
-    student_id: "S003",
-    avg_attendance: 85,
-    present_count: 42,
-    late_count: 5,
-    absent_count: 3
-  }, {
-    student_id: "S004",
-    avg_attendance: 63,
-    present_count: 31,
-    late_count: 8,
-    absent_count: 11
-  }];
-
-
-
-
-
-
+   
 
   return <motion.div variants={containerVariants} initial="hidden" animate="visible" className="px-2">
       <motion.div className="mb-6" variants={itemVariants}>
@@ -348,7 +340,7 @@ const Attendance = () => {
           </>}
         {activeTab === 'overview' && <Overview />}
         {activeTab === 'courses' && <Courses />}
-        {activeTab === 'students' && <Student data={studentData} />}
+        {activeTab === 'students' && <Student data={data.student_wise} />}
       </motion.div>
     </motion.div>;
 };
