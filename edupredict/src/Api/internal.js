@@ -155,3 +155,13 @@ export const teacher_analysis = async (course) => {
   }
   return response;
 };
+
+export const dropout_risk_by_course = async () => {
+  let response;
+  try {
+    response = await api.get(`/dropout_risk_by_course`);
+  } catch (error) {
+    return error;
+  }
+  return response;
+};

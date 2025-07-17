@@ -9,6 +9,8 @@ import { MdMenu } from 'react-icons/md';
 import { RiLoginBoxLine, RiLogoutBoxFill } from 'react-icons/ri';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Award, Book, CalendarClock, ChartColumnBig, CloudUpload, LayoutDashboard, LogOut, MessageSquare, NotepadText, Settings, Users, UserX } from 'lucide-react';
+import { Student } from './Tabs/Student';
+import Attendance from './../pages/Attendance';
 
 const Sidebar = () => {
   const isTabletMid = window.innerWidth <= 768;
@@ -210,6 +212,7 @@ const Sidebar = () => {
                       </motion.div>}
                   </AnimatePresence>
                 </motion.li>
+                
                 <motion.li variants={itemVariants}>
                   <NavLink to="/studentdashboard" className={({
                 isActive
@@ -248,11 +251,11 @@ const Sidebar = () => {
                   </NavLink>
                 </motion.li>
                 
-                <motion.li variants={itemVariants}>
-                  <NavLink to="/attendence" className={({
+              <motion.li variants={itemVariants}>
+                  <NavLink to="/studentattendance" className={({
                 isActive
               }) => `flex items-center gap-3.5 p-2.5 rounded-lg transition-all duration-200 ${isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'}`}>
-                    <CalendarClock size={26} className="min-w-max" />
+                    <UserX size={26} className="min-w-max" />
                     <AnimatePresence>
                       {open && <motion.span initial={{
                     opacity: 0
@@ -261,11 +264,13 @@ const Sidebar = () => {
                   }} exit={{
                     opacity: 0
                   }}>
-                          Attendence
+                        Student Attendance
+
                         </motion.span>}
                     </AnimatePresence>
                   </NavLink>
                 </motion.li>
+
 
                 <motion.li variants={itemVariants}>
                   <NavLink to="/quiz" className={({
@@ -401,7 +406,7 @@ const Sidebar = () => {
                     </AnimatePresence>
                   </NavLink>
                 </motion.li>
-
+              
                 <motion.li variants={itemVariants}>
                   <NavLink to="/attendances" className={({
                 isActive

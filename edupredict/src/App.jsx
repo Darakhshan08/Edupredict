@@ -16,6 +16,9 @@ import Register from "./pages/Register";
 import Dataset from "./pages/Dataset";
 import Setting from "./pages/Setting";
 import Feedback from "./pages/Feedback";
+import Prediction from "./pages/prediction";
+import StudentAttendance from "./pages/StudentAttendence";
+
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
   const [userRole, setUserRole] = useState("none");
@@ -47,6 +50,14 @@ export function App() {
                   element={
                     <AuthLayout token={"admin"}>
                       <Attendance />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  path="/prediction"
+                  element={
+                    <AuthLayout token={"admin"}>
+                      <Prediction />
                     </AuthLayout>
                   }
                 />
@@ -104,6 +115,14 @@ export function App() {
                   element={
                     <AuthLayout token={"student"}>
                       <StudentDashboard />
+                    </AuthLayout>
+                  }
+                />
+                   <Route
+                  path="/studentattendance"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <StudentAttendance />
                     </AuthLayout>
                   }
                 />
