@@ -18,6 +18,7 @@ import Setting from "./pages/Setting";
 import Feedback from "./pages/Feedback";
 import Prediction from "./pages/prediction";
 import StudentAttendance from "./pages/StudentAttendence";
+import Quiz from "./pages/Quiz";
 
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
@@ -118,11 +119,19 @@ export function App() {
                     </AuthLayout>
                   }
                 />
-                   <Route
+                <Route
                   path="/studentattendance"
                   element={
                     <AuthLayout token={"student"}>
                       <StudentAttendance />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  path="/studentquiz"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <Quiz />
                     </AuthLayout>
                   }
                 />
