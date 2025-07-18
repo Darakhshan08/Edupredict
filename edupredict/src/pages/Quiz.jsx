@@ -44,9 +44,30 @@ const months = [
   'November',
   'December',
 ]
-
+ const quizData = [
+    {
+      name: 'AI Fundamentals',
+      total: 4
+    },
+    {
+      name: 'AI Fundamentals',
+      total: 12
+    },
+    {
+      name: 'Data Science',
+      total: 12
+    },
+    {
+      name: 'Machine Learning',
+      total: 13
+    },
+    {
+      name: 'Web Development',
+      total: 10
+    },
+]
 function Quiz() {
-   const [selectedMonth, setSelectedMonth] = useState('Select Month')
+    const [selectedMonth, setSelectedMonth] = useState('Select Month')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
   // Close dropdown when clicking outside
@@ -152,6 +173,40 @@ function Quiz() {
         </ResponsiveContainer>
       </div>
     </div>
+     <div className="bg-white rounded-lg p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Quiz Breakdown
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Detailed quiz score for each course in the selected month.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-300">
+            <thead>
+              <tr>
+                <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">
+                  Course
+                </th>
+                <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">
+                 Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {quizData.map((item, index) => (
+                <tr key={index}>
+                  <td className="py-3 px-4 text-gray-800 border border-gray-300">
+                    {item.name}
+                  </td>
+                  <td className="py-3 px-4 text-[#a3a36d] border border-gray-300">
+                    {item.total}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
