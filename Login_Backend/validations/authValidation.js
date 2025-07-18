@@ -10,7 +10,7 @@ exports.registerSchema = Joi.object({
     then: Joi.required(),
     otherwise: Joi.forbidden(),
   }),
-  courses: Joi.array().items(Joi.string()).when("role", {
+  courses: Joi.string().when("role", {
     is: "teacher",
     then: Joi.required(),
     otherwise: Joi.forbidden(),

@@ -26,7 +26,9 @@ const UserSchema = new Schema({
   student_id: {
     type: String,
   },
-  courses: [String],
+  courses: {
+    type: String,
+  },
 
   // ✅ NEW FIELDS
   isActive: {
