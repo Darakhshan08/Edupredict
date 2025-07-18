@@ -7,7 +7,8 @@ const seedAdmin = require("./seeders/adminSeeder");
 const authroutes = require("./routes/authRoutes");
 const { protect } = require("./middleware/authMiddleware");
 const Userroute = require("./routes/userRoutes");
-const seedFeedback = require("./seeders/feebackSeeder");
+const feedbackRoutes = require("./routes/feedback");
+
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(express.json());
 
 app.use('/api/user', Userroute);
 app.use("/api/auth", authroutes);
+app.use("/api/feedback", feedbackRoutes); // ⬅️ Mount route
 
 app.get("/api/admin", protect(["admin"]), (req, res) => {
   res.json({ msg: "Welcome Admin" });
@@ -43,7 +45,6 @@ app.get("/api/teacher", protect(["teacher"]), (req, res) => {
 
 connectDB().then(() => {
    seedAdmin();
-   seedFeedback();
   app.listen(PORT, console.log(`Backend is running on the ${PORT}`));
 });
 

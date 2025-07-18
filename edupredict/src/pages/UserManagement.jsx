@@ -1,33 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { SearchIcon, UserPlusIcon, PencilIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import axios from "axios";
 
 const UserManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [statusFilter, setStatusFilter] = useState("All Status");
-
   const [users, setUsers] = useState([]);
 
-  const filteredUsers = users.filter((user) => {
-    const roleMatch =
-      roleFilter === "All Roles" ||
-      (user.role && user.role.toLowerCase() === roleFilter.toLowerCase());
-  
-    const statusMatch =
-      statusFilter === "All Status" ||
-      (statusFilter === "Active" && user.isActive === true) ||
-      (statusFilter === "Inactive" && user.isActive === false);
-  
-    return roleMatch && statusMatch;
-  });
+  const filteredUsers = users
+    .filter((user) => {
+      const roleMatch =
+        roleFilter === "All Roles" ||
+        (user.role && user.role.toLowerCase() === roleFilter.toLowerCase());
 
-  // ✅ Fetch users on component mount
+      const statusMatch =
+        statusFilter === "All Status" ||
+        (statusFilter === "Active" && user.isActive === true) ||
+        (statusFilter === "Inactive" && user.isActive === false);
+
+      return roleMatch && statusMatch;
+    })
+    .filter((user) => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        searchQuery === "" ||
+        user.name?.toLowerCase().includes(searchLower) ||
+        user.email?.toLowerCase().includes(searchLower) ||
+        user.role?.toLowerCase().includes(searchLower)
+      );
+    });
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await axios.get("http://localhost:8000/api/user");
-        setUsers(res.data.data); // because your response has { success, data: [...] }
+        setUsers(res.data.data || []);
       } catch (err) {
         console.error("Failed to fetch users", err);
       }
@@ -58,7 +66,7 @@ const UserManagement = () => {
               />
             </div>
 
-            {/* 🔘 Filters + Add Button */}
+            {/* 🔘 Filters */}
             <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full md:w-auto">
               <select
                 value={roleFilter}
@@ -83,6 +91,7 @@ const UserManagement = () => {
             </div>
           </div>
         </div>
+
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -109,7 +118,7 @@ const UserManagement = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredUsers.map((user, index) => (
-                <tr key={user.id} className="border-b border-gray-200">
+                <tr key={user.id || user._id} className="border-b border-gray-200">
                   <td className="py-4 px-4 text-gray-700">{index + 1}</td>
                   <td className="py-4 px-4 text-gray-700">{user.name}</td>
                   <td className="py-4 px-4 text-gray-500">{user.email}</td>
@@ -138,12 +147,19 @@ const UserManagement = () => {
                           day: "numeric",
                           hour: "numeric",
                           minute: "numeric",
-                          hour12: true, // 🕒 For AM/PM
+                          hour12: true,
                         })
                       : "Not logged in yet"}
                   </td>
                 </tr>
               ))}
+              {filteredUsers.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="text-center py-6 text-gray-500">
+                    No users found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

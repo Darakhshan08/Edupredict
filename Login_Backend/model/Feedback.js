@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const feedbackSchema = new Schema({
   role: {
     type: String,
-    enum: ['Admin', 'Teacher', 'Student'],
+    enum: ['admin', 'teacher', 'student'],
     required: true
   },
   title: {
