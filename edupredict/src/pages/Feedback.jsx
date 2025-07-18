@@ -7,6 +7,40 @@ const Feedback = () => {
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [feedbacks, setFeedbacks] = useState([]);
 
+  useEffect(() => {
+  // Get the raw item from localStorage
+  const adminData = localStorage.getItem("admin");
+  const teacherData = localStorage.getItem("teacher");
+  const studentData = localStorage.getItem("student");
+
+  // Extract actual token string
+  const getToken = (data) => {
+    try {
+      const parsed = JSON.parse(data);
+      return parsed.token;
+    } catch (err) {
+      return data; // In case it's already a plain token
+    }
+  };
+
+  const token = getToken(adminData || teacherData || studentData);
+
+  const fetchFeedbacks = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/feedback", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFeedbacks(res.data.feedbacks || []);
+    } catch (err) {
+      console.error("Failed to fetch feedbacks", err);
+    }
+  };
+
+  fetchFeedbacks();
+}, []);
+
   const filteredFeedbacks = feedbacks
     .filter((fb) => fb.role !== "admin") // Exclude Admin feedbacks
     .filter((fb) => {
@@ -22,27 +56,6 @@ const Feedback = () => {
 
       return roleMatch && searchMatch;
     });
-
-  useEffect(() => {
-    const token =
-      localStorage.getItem("admin") ||
-      localStorage.getItem("teacher") ||
-      localStorage.getItem("student");
-
-    const fetchFeedbacks = async () => {
-      try {
-        const res = await axios.get("http://localhost:8000/api/feedback", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setFeedbacks(res.data.feedbacks || []);
-      } catch (err) {
-        console.error("Failed to fetch feedbacks", err);
-      }
-    };
-    fetchFeedbacks();
-  }, []);
 
   return (
     <div>

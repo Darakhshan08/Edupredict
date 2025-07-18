@@ -19,6 +19,7 @@ import Feedback from "./pages/Feedback";
 import Prediction from "./pages/prediction";
 import StudentAttendance from "./pages/StudentAttendence";
 import Quiz from "./pages/Quiz";
+import FeedbackTeac from "./pages/FeedbackTeac";
 
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
@@ -84,6 +85,14 @@ export function App() {
                   element={
                     <AuthLayout token={"admin"}>
                       <LMS />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  path="/feedbackteac"
+                  element={
+                    <AuthLayout token={"teacher"}>
+                      <FeedbackTeac/>
                     </AuthLayout>
                   }
                 />
