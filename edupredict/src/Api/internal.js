@@ -22,6 +22,18 @@ export const getAttendenceStudentIDandCourse = async (
   }
   return response;
 };
+
+
+export const fetch_attendance_table = async () => {
+  let response;
+  try {
+    response = await api.get(`/attendance_status`);
+  } catch (error) {
+    return error;
+  }
+  return response;
+};
+
 export const perform_attendance_trend_analysis = async (limit) => {
   let response;
   try {

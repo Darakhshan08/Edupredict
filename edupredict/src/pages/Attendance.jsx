@@ -9,31 +9,76 @@ import {
 import { Overview } from '../components/Tabs/Overview';
 import { Courses } from '../components/Tabs/Courses';
 import { Student } from '../components/Tabs/Student';
-import { attendance_statistics } from '../Api/internal';
+import { attendance_statistics, fetch_attendance_table } from '../Api/internal';
 import Loader from '../components/Custom/Loader';
 const Attendance = () => {
   const [activeTab, setActiveTab] = useState('attendance');
   const [data, setData] = useState(null);
+  const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const fetchData = async () => {
-    try {
-      const response = await attendance_statistics();
-      if (response.status == 200) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+  const [selectedCourse, setSelectedCourse] = useState("All");
+  const [courses, setCourses] = useState([]);
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 20;
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  // const currentRecords = attendanceData.slice(indexOfFirstRecord, indexOfLastRecord);
+ 
+  // const totalPages = Math.ceil(attendanceData.length / recordsPerPage);
+
+  const filteredData = selectedCourse === "All"
+  ? attendanceData
+  : attendanceData.filter(student => student.course === selectedCourse);
+
+const currentRecords = filteredData.slice(indexOfFirstRecord, indexOfLastRecord);
+const totalPages = Math.ceil(filteredData.length / recordsPerPage);
+
+
+  // Fetch dashboard statistics
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await attendance_statistics();
+        if (response.status === 200) {
+          setData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
     fetchData();
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // Fetch attendance table data
+  useEffect(() => {
+    const loadAttendance = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch_attendance_table();
+        if (res?.data) {
+          setAttendanceData(res.data);
+
+          // Extract unique course names
+         const uniqueCourses = Array.from(new Set(res.data.map(d => d.course))).filter(Boolean);
+         setCourses(["All", ...uniqueCourses]);
+        }
+      } catch (error) {
+        console.error("Error fetching attendance:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (activeTab === "attendance") {
+      loadAttendance();
+    }
+  }, [activeTab]);
+
+  if (loading) return <Loader />;
 
   const containerVariants = {
     hidden: {
@@ -160,117 +205,63 @@ const Attendance = () => {
 </motion.div>
 
       {/* Tab Content */}
-      <motion.div className="bg-white rounded-lg shadow-lg overflow-hidden" variants={itemVariants} key={activeTab} initial={{
-      opacity: 0,
-      y: 20
-    }} animate={{
-      opacity: 1,
-      y: 0
-    }} transition={{
-      duration: 0.3
-    }}>
-        {activeTab === 'attendance' && <>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b">
-              <h2 className="text-lg font-semibold text-gray-800 mb-3 sm:mb-0">
-                Today's Attendance
-              </h2>
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
-                <select className="px-3 py-1 border rounded text-sm w-full sm:w-auto">
-                  <option>All Classes</option>
-                  <option>Class 1</option>
-                  <option>Class 2</option>
-                  <option>Class 3</option>
-                </select>
-                <motion.button className="px-3 py-1 bg-indigo-600 text-white rounded text-sm w-full sm:w-auto" whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }}>
-                  Export
-                </motion.button>
-              </div>
+     <motion.div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      {activeTab === 'attendance' && (
+        <>
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-semibold text-gray-800">Today's Attendance</h2>
+            <div className="flex space-x-2">
+        <select
+  className="px-3 py-1 border rounded text-sm"
+  value={selectedCourse}
+  onChange={(e) => {
+    setSelectedCourse(e.target.value);
+    setCurrentPage(1); // reset to first page when filter changes
+  }}
+>
+  {courses.map(course => (
+    <option key={course} value={course}>{course}</option>
+  ))}
+</select>
+{/* 
+              <motion.button className="px-3 py-1 bg-indigo-600 text-white rounded text-sm" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                Export
+              </motion.button> */}
             </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Student
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Class
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Time
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {[1, 2, 3, 4, 5].map(i => <motion.tr key={i} className="hover:bg-gray-50" initial={{
-                opacity: 0,
-                y: 10
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                delay: i * 0.05
-              }} whileHover={{
-                backgroundColor: 'rgba(249, 250, 251, 0.8)'
-              }}>
-                      <td className="px-4 py-3 whitespace-nowrap" data-label="Student">
-                        <div className="flex items-center">
-                          <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-medium mr-3">
-                            {String.fromCharCode(64 + i)}
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900">
-                              Student {i}
-                            </div>
-                            <div className="text-xs text-gray-500">ID: S00{i}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap" data-label="Class">
-                        <div className="text-sm text-gray-900">
-                          Class {Math.floor(Math.random() * 5) + 1}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap" data-label="Status">
-                        {Math.random() > 0.3 ? <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Present
-                          </span> : <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                            Absent
-                          </span>}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500" data-label="Time">
-                        9:0{i} AM
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm" data-label="Actions">
-                        <motion.button className="text-indigo-600 hover:text-indigo-900 mr-3" whileHover={{
-                    scale: 1.1
-                  }} whileTap={{
-                    scale: 0.9
-                  }}>
-                          Edit
-                        </motion.button>
-                        <motion.button className="text-gray-600 hover:text-gray-900" whileHover={{
-                    scale: 1.1
-                  }} whileTap={{
-                    scale: 0.9
-                  }}>
-                          Notes
-                        </motion.button>
-                      </td>
-                    </motion.tr>)}
-                </tbody>
-              </table>
-            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {currentRecords.map((student, i) => (
+                  <motion.tr key={student} className="hover:bg-gray-50" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                    <td className="px-4 py-3">{student.student_id}</td>
+                    <td className="px-4 py-3">{student.student_name}</td>
+                    <td className="px-4 py-3">{student.course}</td>
+                    <td className="px-4 py-3">
+                      {student.status === "Present" ? (
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Present</span>
+                      ) : (
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Absent</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{student.time}</td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+      
+    
             <div className="bg-gray-50 px-4 py-3 flex flex-col sm:flex-row items-center justify-between border-t">
               <div className="flex-1 flex justify-between sm:hidden mb-3 w-full">
                 <motion.button className="px-4 py-2 border rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" whileHover={{
@@ -289,55 +280,47 @@ const Attendance = () => {
                 </motion.button>
               </div>
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+               <div>
+  <p className="text-sm text-gray-700">
+    Showing <span className="font-medium">{indexOfFirstRecord + 1}</span> to{' '}
+    <span className="font-medium">{Math.min(indexOfLastRecord, attendanceData.length)}</span> of{' '}
+    <span className="font-medium">{attendanceData.length}</span> results
+  </p>
+</div>
+
                 <div>
-                  <p className="text-sm text-gray-700">
-                    Showing <span className="font-medium">1</span> to{' '}
-                    <span className="font-medium">5</span> of{' '}
-                    <span className="font-medium">20</span> results
-                  </p>
-                </div>
-                <div>
-                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                    <motion.button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" whileHover={{
-                  backgroundColor: 'rgba(249, 250, 251, 0.8)'
-                }} whileTap={{
-                  scale: 0.97
-                }}>
-                      Previous
-                    </motion.button>
-                    <motion.button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" whileHover={{
-                  backgroundColor: 'rgba(249, 250, 251, 0.8)'
-                }} whileTap={{
-                  scale: 0.97
-                }}>
-                      1
-                    </motion.button>
-                    <motion.button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600 hover:bg-gray-50" whileHover={{
-                  backgroundColor: 'rgba(238, 242, 255, 0.8)'
-                }} whileTap={{
-                  scale: 0.97
-                }}>
-                      2
-                    </motion.button>
-                    <motion.button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" whileHover={{
-                  backgroundColor: 'rgba(249, 250, 251, 0.8)'
-                }} whileTap={{
-                  scale: 0.97
-                }}>
-                      3
-                    </motion.button>
-                    <motion.button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" whileHover={{
-                  backgroundColor: 'rgba(249, 250, 251, 0.8)'
-                }} whileTap={{
-                  scale: 0.97
-                }}>
-                      Next
-                    </motion.button>
-                  </nav>
+                  <div className="flex justify-center mt-4 space-x-2">
+  <button
+    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+    className="px-3 py-1 border rounded bg-white text-sm"
+    disabled={currentPage === 1}
+  >
+    Previous
+  </button>
+
+  {[...Array(totalPages)].map((_, index) => (
+    <button
+      key={index}
+      onClick={() => setCurrentPage(index + 1)}
+      className={`px-3 py-1 border rounded text-sm ${currentPage === index + 1 ? 'bg-indigo-500 text-white' : 'bg-white'}`}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+    className="px-3 py-1 border rounded bg-white text-sm"
+    disabled={currentPage === totalPages}
+  >
+    Next
+  </button>
+</div>
+
                 </div>
               </div>
             </div>
-          </>}
+          </>)}
         {activeTab === 'overview' && <Overview />}
         {activeTab === 'courses' && <Courses />}
         {activeTab === 'students' && <Student data={data.student_wise} />}

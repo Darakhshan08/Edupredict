@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, Tooltip, Legend, XAxis, YAxis } from "recharts";
 import { motion } from "framer-motion";
+import { perform_attendance_trend_analysis } from "../../Api/internal";
+import GraphDropdown from "../Graph/GraphDropDown";
+
 const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"];
 const CustomLegend = ({
   items
@@ -15,64 +18,34 @@ const CustomLegend = ({
     </div>;
 };
 export const Overview = () => {
-  const legendItems = [{
-    name: "Actual",
-    color: "#82ca9d"
-  }, {
-    name: "Predicted",
-    color: "#8884d8"
-  }];
-  const [days, setDays] = useState(7);
+  
+   const legendItems = [
+    { name: "Actual", color: "#82ca9d" },
+    { name: "Predicted", color: "#8884d8" },
+  ];
   const [data, setData] = useState(null);
-  // Mock API function
-  const mockAttendanceTrendAnalysis = days => {
-    const labels = [];
-    const actual = [];
-    const predicted = [];
-    const today = new Date();
-    for (let i = 0; i < days; i++) {
-      const date = new Date();
-      date.setDate(today.getDate() - (days - i - 1));
-      const formattedDate = date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-      });
-      labels.push(formattedDate);
-      // Generate random attendance percentages
-      const actualValue = Math.floor(Math.random() * 30) + 70; // 70-100%
-      actual.push(actualValue);
-      // Predicted is close to actual but slightly different
-      const predictedValue = Math.max(0, Math.min(100, actualValue + (Math.random() * 10 - 5)));
-      predicted.push(predictedValue.toFixed(1));
+  const [loading, setLoading] = useState(false);
+  const [days, setDays] = useState(7);
+  const fetchdata = async () => {
+    setLoading(true);
+    const response = await perform_attendance_trend_analysis(days);
+    if (response.status == 200) {
+      setData(response.data);
     }
-    return {
-      labels,
-      actual,
-      predicted
-    };
+    setLoading(false);
   };
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const response = mockAttendanceTrendAnalysis(days);
-      setData(response);
-    }, 500);
+    fetchdata();
   }, [days]);
-  const GraphDropdown = ({
-    setOption
-  }) => {
-    return <select className="px-3 py-1 border rounded text-sm" onChange={e => setOption(Number(e.target.value))} value={days}>
-        <option value="7">Last 7 days</option>
-        <option value="14">Last 14 days</option>
-        <option value="30">Last 30 days</option>
-      </select>;
-  };
-  if (!data) {
-    return <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-      </div>;
+  if (loading) {
+    return <>Loading....................</>;
   }
-  return <motion.div initial={{
+ 
+
+  return ( 
+    <>
+   {data != null && (
+  <motion.div initial={{
     opacity: 0
   }} animate={{
     opacity: 1
@@ -100,12 +73,17 @@ export const Overview = () => {
               <XAxis dataKey="date" angle={-45} textAnchor="end" />
               <YAxis domain={[0, 100]} />
               <Tooltip />
-              <Line type="monotone" dataKey="actual" stroke={COLORS[0]} name="Actual" strokeWidth={2} />
-              <Line type="monotone" dataKey="predicted" stroke={COLORS[1]} name="Predicted" strokeDasharray="5 5" />
+             <Line type="cardinal" dataKey="actual" stroke={COLORS[0]} name="Actual" strokeWidth={2} />
+            <Line type="stepBefore" dataKey="predicted" stroke={COLORS[1]} name="Predicted" strokeWidth={2} />
+
+
             </LineChart>
           </ResponsiveContainer>
           <CustomLegend items={legendItems} />
         </div>
       </div>
-    </motion.div>;
+    </motion.div>
+   )}
+    </>
+  );
 };
