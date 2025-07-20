@@ -365,10 +365,6 @@ const Sidebar = () => {
 
               </>}
 
-
-
-
-
               {teacher_token && <>
                 <motion.li variants={itemVariants} className="mt-2">
                   <AnimatePresence>
