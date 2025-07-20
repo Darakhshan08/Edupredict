@@ -13,20 +13,10 @@ import { attendance_course_performance } from "../Api/internal";
 import Loader from "../components/Custom/Loader"; 
 
 function StudentAttendance() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("March 2023");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const months = [
-    "January 2023",
-    "February 2023",
-    "March 2023",
-    "April 2023",
-    "May 2023",
-    "June 2023",
-  ];
-
+  
   const fetchdata = async () => {
     setLoading(true);
     const response = await attendance_course_performance();
@@ -39,11 +29,6 @@ function StudentAttendance() {
   useEffect(() => {
     fetchdata();
   }, []);
-
-  const handleMonthSelect = (month) => {
-    setSelectedMonth(month);
-    setIsDropdownOpen(false);
-  };
 
   if (loading || !data) return <Loader />;
 
@@ -74,7 +59,7 @@ function StudentAttendance() {
     <div className="w-full min-h-screen p-4 md:p-8 flex flex-col items-center">
       <div className="w-full max-w-7xl">
         {/* Performance Section */}
-        <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
+        <div className="bg-white rounded-lg p-6 mb-6 shadow-md">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h2 className="text-2xl font-semibold text-gray-800">
@@ -85,28 +70,8 @@ function StudentAttendance() {
               </p>
             </div>
             <div className="flex gap-2 relative">
-              <button
-                className="bg-yellow-100 px-4 py-2 rounded-md flex items-center gap-2 text-gray-700"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                <span>{selectedMonth}</span>
-                <ChevronDownIcon size={16} />
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute z-10 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200">
-                  <ul className="py-1">
-                    {months.map((month) => (
-                      <li
-                        key={month}
-                        className="px-4 py-2 hover:bg-yellow-50 cursor-pointer text-gray-700"
-                        onClick={() => handleMonthSelect(month)}
-                      >
-                        {month}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+           
+            
               <button className="flex items-center px-4 py-2 bg-[#f7f9e6] text-gray-700 rounded-md border border-gray-200">
                 <DownloadIcon className="mr-2 h-4 w-4" />
                 <span>Download</span>
@@ -131,12 +96,12 @@ function StudentAttendance() {
         </div>
 
         {/* Breakdown Table */}
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="bg-white rounded-lg p-6 shadow-md">
           <h2 className="text-2xl font-semibold text-gray-800">
             Attendance Breakdown
           </h2>
           <p className="text-gray-600 mb-6">
-            Detailed attendance scores for each course in the selected month.
+            Detailed attendance scores for each course 
           </p>
           <div className="overflow-x-auto">
             <table className="min-w-full border border-gray-300">

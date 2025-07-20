@@ -20,6 +20,8 @@ import Prediction from "./pages/prediction";
 import StudentAttendance from "./pages/StudentAttendence";
 import Quiz from "./pages/Quiz";
 import FeedbackTeac from "./pages/FeedbackTeac";
+import Dropout_risk from "./pages/Dropout_risk";
+import  Course_demand  from "./pages/Course_demand";
 
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
@@ -157,6 +159,22 @@ export function App() {
                   element={
                     <AuthLayout token={"teacher"}>
                       <Feedback/>
+                    </AuthLayout>
+                  }
+                />
+                 <Route
+                  path="/dropout"
+                  element={
+                    <AuthLayout token={"teacher"}>
+                      <Dropout_risk/>
+                    </AuthLayout>
+                  }
+                />
+                 <Route
+                  path="/demands"
+                  element={
+                    <AuthLayout token={"teacher"}>
+                      <Course_demand/>
                     </AuthLayout>
                   }
                 />

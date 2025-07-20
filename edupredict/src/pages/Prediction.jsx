@@ -4,26 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
 function Prediction() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("March 2023");
   const [predictionData, setPredictionData] = useState({ Low: 0, Medium: 0, High: 0 });
   const [studentData, setStudentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  const months = [
-    "January 2023",
-    "February 2023",
-    "March 2023",
-    "April 2023",
-    "May 2023",
-    "June 2023"
-  ];
-
-  const handleMonthSelect = (month) => {
-    setSelectedMonth(month);
-    setIsDropdownOpen(false);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,10 +67,10 @@ function Prediction() {
                   <div
                     className={`absolute left-0 top-0 h-full rounded transition-all duration-300 ${
                       level === "Low"
-                        ? "bg-pink-300"
+                        ? "bg-[#578FCA]"
                         : level === "Medium"
-                        ? "bg-orange-300"
-                        : "bg-yellow-300"
+                        ? "bg-[#0096FF]"
+                        : "bg-[#00CCDD]"
                     }`}
                     style={{ width: getBarWidth(predictionData[level]) }}
                   ></div>
@@ -115,37 +99,9 @@ function Prediction() {
           <div className="flex justify-between mb-6 relative">
             <div className="flex-grow" />
             <div className="flex gap-4">
-              <button
-                className="bg-white border border-gray-200 px-4 py-2 rounded-md flex items-center gap-2 text-gray-700"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                <span>{selectedMonth}</span>
-                <ChevronDownIcon size={16} />
-              </button>
+             
 
-              <AnimatePresence>
-                {isDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute z-10 mt-12 right-24 w-48 bg-white rounded-md shadow-lg border border-gray-200"
-                  >
-                    <ul className="py-1">
-                      {months.map((month) => (
-                        <li
-                          key={month}
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
-                          onClick={() => handleMonthSelect(month)}
-                        >
-                          {month}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+           
 
               <button className="bg-white border border-gray-200 px-4 py-2 rounded-md flex items-center gap-2 text-gray-700">
                 <DownloadIcon size={16} />
@@ -161,7 +117,6 @@ function Prediction() {
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Student Name</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Course</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Teacher Name</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Risk Level</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Dropout Risk</th>
                 </tr>
@@ -191,8 +146,8 @@ function Prediction() {
                           transition={{ duration: 0.3 }}
                         >
                           <td className="py-3 px-4 text-gray-800">{student.name}</td>
-                          <td className="py-3 px-4 text-gray-800">Web Development</td>
-                          <td className="py-3 px-4 text-gray-800">{student.name}</td>
+                          <td className="py-3 px-4 text-gray-800">{student.Course}</td>
+                        
                           <td className="py-3 px-4">
                             <span className={`text-xs px-3 py-1 rounded-full ${riskColor[maxRisk]}`}>
                               {maxRisk}

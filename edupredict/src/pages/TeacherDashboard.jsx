@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Top from '../components/Tabs/Top';
+
 const TeacherDashboard = () => {
+  
+
+
+
   const containerVariants = {
     hidden: {
       opacity: 0
@@ -31,10 +37,20 @@ const TeacherDashboard = () => {
   const classes = ['Mathematics 101', 'Mathematics 202', 'Advanced Calculus'];
   const activities = ['John D. submitted assignment', 'Sarah M. requested help', 'Quiz results are ready', 'New announcement posted'];
   return <motion.div className="p-4" variants={containerVariants} initial="hidden" animate="visible">
-      <motion.div variants={itemVariants}>
-        <h1 className="text-2xl font-bold mb-2">Teacher Dashboard</h1>
-        <p className="mb-6 text-gray-600">Welcome to your teacher dashboard!</p>
+      <motion.div className="mb-6" variants={itemVariants}>
+        <h1 className="text-2xl font-bold text-gray-800 mb-1">
+          Teacher Dashboard
+        </h1>
+        <p className="text-gray-600">
+          Track and Analyze your Student and Course records
+        </p>
       </motion.div>
+
+     <Top />
+
+
+
+
       <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-6" variants={containerVariants}>
         <motion.div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300" variants={itemVariants}>
           <h2 className="text-xl font-semibold mb-4 flex items-center">

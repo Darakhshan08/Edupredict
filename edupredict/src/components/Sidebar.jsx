@@ -9,7 +9,7 @@ import Feedbackform from "./../pages/Feedbackform";
 import { MdMenu } from 'react-icons/md';
 import { RiLoginBoxLine, RiLogoutBoxFill } from 'react-icons/ri';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Award, Book, CalendarClock, ChartColumnBig, CloudUpload, LayoutDashboard, LogOut, MessageSquare, NotepadText, Settings, Users, UserX } from 'lucide-react';
+import { Award, Book, BookOpenCheckIcon, BookOpenIcon, CalendarClock, ChartColumnBig, CloudUpload, GraduationCapIcon, LayoutDashboard, LogOut, MessageSquare, NotepadText, Settings, Users, UserX } from 'lucide-react';
 import { Student } from './Tabs/Student';
 import Attendance from './../pages/Attendance';
 
@@ -111,12 +111,12 @@ const Sidebar = () => {
             overflow-hidden md:relative fixed
          h-screen shadow-xl">
           <div className="gradient-bg flex items-center gap-2.5 font-medium py-4 border-slate-300 mx-3 rounded-b-xl mb-4">
-            <motion.div className="flex items-center justify-center bg-white rounded-full p-1 ml-3 w-10 h-10" whileHover={{
+            <motion.div className="flex items-center justify-center rounded-full p-1 ml-3 w-10 h-10" whileHover={{
               scale: 1.05
             }} whileTap={{
               scale: 0.95
             }}>
-              <img src="https://via.placeholder.com/35?text=EP" width={35} alt="Logo" className="rounded-full" />
+             <BookOpenIcon size={40} className="text-white" />
             </motion.div>
             <AnimatePresence>
               {open && <motion.span initial={{
@@ -165,23 +165,9 @@ const Sidebar = () => {
                   </motion.li>
 
                   <motion.li variants={itemVariants}>
-                    <NavLink to="/dataset" className="flex items-center gap-3.5 p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                      <CloudUpload size={26} className="min-w-max" />
-                      Datasets
-                    </NavLink>
-                  </motion.li>
-
-                  <motion.li variants={itemVariants}>
-                    <NavLink to="/lms" className="flex items-center gap-3.5 p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                      <TbReportAnalytics size={26} className="min-w-max" />
-                      {open && <span>LMS</span>}
-                    </NavLink>
-                  </motion.li>
-
-                  <motion.li variants={itemVariants}>
-                    <NavLink to="/demographics" className="flex items-center gap-3.5 p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                      <GrPieChart size={26} className="min-w-max" />
-                      {open && <span>Demographics</span>}
+                    <NavLink to="/prediction" className="flex items-center gap-3.5 p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                      <ChartColumnBig size={26} className="min-w-max" />
+                      {open && <span>Prediction</span>}
                     </NavLink>
                   </motion.li>
                   <motion.li variants={itemVariants}>
@@ -258,7 +244,7 @@ const Sidebar = () => {
                   <NavLink to="/studentattendance" className={({
                     isActive
                   }) => `flex items-center gap-3.5 p-2.5 rounded-lg transition-all duration-200 ${isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'}`}>
-                    <UserX size={26} className="min-w-max" />
+                    <CalendarClock size={26} className="min-w-max" />
                     <AnimatePresence>
                       {open && <motion.span initial={{
                         opacity: 0
@@ -267,7 +253,7 @@ const Sidebar = () => {
                       }} exit={{
                         opacity: 0
                       }}>
-                        Student Attendance
+                        Attendance
 
                       </motion.span>}
                     </AnimatePresence>
@@ -399,7 +385,7 @@ const Sidebar = () => {
                 </motion.li>
 
                 <motion.li variants={itemVariants}>
-                  <NavLink to="/dropoutrisk" className={({
+                  <NavLink to="/dropout" className={({
                     isActive
                   }) => `flex items-center gap-3.5 p-2.5 rounded-lg transition-all duration-200 ${isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'}`}>
                     <UserX size={26} className="min-w-max" />
@@ -439,7 +425,7 @@ const Sidebar = () => {
                 </motion.li>
 
                 <motion.li variants={itemVariants}>
-                  <NavLink to="/demand" className={({
+                  <NavLink to="/demands" className={({
                     isActive
                   }) => `flex items-center gap-3.5 p-2.5 rounded-lg transition-all duration-200 ${isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'}`}>
                     <ChartColumnBig size={26} className="min-w-max" />
