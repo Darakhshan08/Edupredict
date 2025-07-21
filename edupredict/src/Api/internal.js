@@ -63,6 +63,10 @@ export const attendance_statistics = async () => {
   return response;
 };
 
+export const get_student_probabilities = async () => {
+  return await api.get("/get_student_probabilities");
+};
+
 export const get_student_performance = async () => {
   let response;
   try {

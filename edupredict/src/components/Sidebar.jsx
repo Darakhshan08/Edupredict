@@ -405,7 +405,7 @@ const Sidebar = () => {
                 </motion.li>
 
                 <motion.li variants={itemVariants}>
-                  <NavLink to="/attendances" className={({
+                  <NavLink to="/stdperformance" className={({
                     isActive
                   }) => `flex items-center gap-3.5 p-2.5 rounded-lg transition-all duration-200 ${isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'}`}>
                     <CalendarClock size={26} className="min-w-max" />
