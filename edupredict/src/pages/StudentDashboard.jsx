@@ -5,30 +5,30 @@ import { student_data } from "../Api/internal";
 import Loader from "../components/Custom/Loader";
 const StudentDashboard = () => {
 
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(null);
-  const student_id = localStorage.getItem("student");
-  const fetchData = async (id) => {
-    setLoading(true);
-    try {
-      const res = await student_data(id);
-      if (res.status == 200) {
-        setData(res.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    setLoading(false);
-  };
-  useEffect(() => {
-    fetchData(student_id);
-  }, []);
-  if (loading) {
-    return <Loader />;
-  }
-  if (!student_id) {
-    header("/");
-  }
+  // const [loading, setLoading] = useState(false);
+  // const [data, setData] = useState(null);
+  // const student_id = localStorage.getItem("student");
+  // const fetchData = async (id) => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await student_data(id);
+  //     if (res.status == 200) {
+  //       setData(res.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setLoading(false);
+  // };
+  // useEffect(() => {
+  //   fetchData(student_id);
+  // }, []);
+  // if (loading) {
+  //   return <Loader />;
+  // }
+  // if (!student_id) {
+  //   header("/");
+  // }
 
 
 
@@ -76,7 +76,7 @@ const StudentDashboard = () => {
       </motion.div>
 
 
-   <StudentTop data={data} />
+   <StudentTop />
 
 
 

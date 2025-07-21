@@ -1,25 +1,88 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   UsersIcon,
   CheckCircle2Icon,
   XCircleIcon,
-  BarChart2Icon
+  BarChart2Icon,
+  GraduationCapIcon,
+  Book,
 } from "lucide-react";
-import { Overview } from '../components/Tabs/Overview';
-import { Courses } from '../components/Tabs/Courses';
-import { Student } from '../components/Tabs/Student';
-import { attendance_statistics, fetch_attendance_table } from '../Api/internal';
-import Loader from '../components/Custom/Loader';
+import { Overview } from "../components/Tabs/Overview";
+import { Courses } from "../components/Tabs/Courses";
+import { Student } from "../components/Tabs/Student";
+import {
+  attendance_course_performance,
+  attendance_statistics,
+  fetch_attendance_table,
+} from "../Api/internal";
+import Loader from "../components/Custom/Loader";
+import axios from "axios";
 const Attendance = () => {
-  const [activeTab, setActiveTab] = useState('attendance');
+  const [activeTab, setActiveTab] = useState("attendance");
   const [data, setData] = useState(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [totalTeachers, setTotalTeachers] = useState(0);
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
+
+
+
+
+
+  const fetchdata = async () => {
+    setLoading(true);
+    try {
+      const response = await attendance_course_performance();
+      if (response.status === 200) {
+        const courseData = response.data;
+  
+        // metrics object hai response ke andar
+        const metrics = courseData.metrics;
+  
+        // total_courses metrics ke andar se
+        const totalCourses = metrics.total_courses || courseData.total_courses || 0;
+  
+        setTotalCourses(totalCourses);
+        setData(courseData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
+  
+  useEffect(() => {
+    fetchdata();
+  }, []);
+  
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/user");
+        const users = res.data.data || [];
+
+        const teacherCount = users.filter(
+          (user) => user.role === "teacher"
+        ).length;
+        const studentCount = users.filter(
+          (user) => user.role === "student"
+        ).length;
+
+        setTotalTeachers(teacherCount);
+        setTotalStudents(studentCount);
+      } catch (err) {
+        console.error("Failed to fetch users", err);
+      }
+    };
+    fetchUsers();
+  }, []);
+
   const [selectedCourse, setSelectedCourse] = useState("All");
   const [courses, setCourses] = useState([]);
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 20;
@@ -27,16 +90,19 @@ const Attendance = () => {
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   // const currentRecords = attendanceData.slice(indexOfFirstRecord, indexOfLastRecord);
- 
+
   // const totalPages = Math.ceil(attendanceData.length / recordsPerPage);
 
-  const filteredData = selectedCourse === "All"
-  ? attendanceData
-  : attendanceData.filter(student => student.course === selectedCourse);
+  const filteredData =
+    selectedCourse === "All"
+      ? attendanceData
+      : attendanceData.filter((student) => student.course === selectedCourse);
 
-const currentRecords = filteredData.slice(indexOfFirstRecord, indexOfLastRecord);
-const totalPages = Math.ceil(filteredData.length / recordsPerPage);
-
+  const currentRecords = filteredData.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
+  const totalPages = Math.ceil(filteredData.length / recordsPerPage);
 
   // Fetch dashboard statistics
   useEffect(() => {
@@ -63,8 +129,10 @@ const totalPages = Math.ceil(filteredData.length / recordsPerPage);
           setAttendanceData(res.data);
 
           // Extract unique course names
-         const uniqueCourses = Array.from(new Set(res.data.map(d => d.course))).filter(Boolean);
-         setCourses(["All", ...uniqueCourses]);
+          const uniqueCourses = Array.from(
+            new Set(res.data.map((d) => d.course))
+          ).filter(Boolean);
+          setCourses(["All", ...uniqueCourses]);
         }
       } catch (error) {
         console.error("Error fetching attendance:", error);
@@ -82,34 +150,39 @@ const totalPages = Math.ceil(filteredData.length / recordsPerPage);
 
   const containerVariants = {
     hidden: {
-      opacity: 0
+      opacity: 0,
     },
     visible: {
       opacity: 1,
       transition: {
-        when: 'beforeChildren',
-        staggerChildren: 0.1
-      }
-    }
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
   };
   const itemVariants = {
     hidden: {
       y: 20,
-      opacity: 0
+      opacity: 0,
     },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 300,
-        damping: 24
-      }
-    }
+        damping: 24,
+      },
+    },
   };
-   
 
-  return <motion.div variants={containerVariants} initial="hidden" animate="visible" className="px-2">
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="px-2"
+    >
       <motion.div className="mb-6" variants={itemVariants}>
         <h1 className="text-2xl font-bold text-gray-800 mb-1">
           Attendance Management
@@ -119,213 +192,281 @@ const totalPages = Math.ceil(filteredData.length / recordsPerPage);
         </p>
       </motion.div>
       <motion.div
-  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6"
-  initial="hidden"
-  animate="visible"
-  variants={{
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
-  }}
->
-  <motion.div
-    className="bg-white rounded-xl shadow-md p-5 border-l-4 border-green-500 hover:shadow-lg transition-all duration-300"
-    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-    whileHover={{ y: -6, transition: { duration: 0.2 } }}
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <UsersIcon size={28} className="text-green-600" />
-      <div className="text-sm text-gray-600">Total Students</div>
-    </div>
-    <div className="text-3xl font-extrabold text-green-600">248</div>
-  </motion.div>
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
+        }}
+      >
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-green-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <Book size={32} className="text-green-600" />
+            <div className="text-md text-gray-600">Total Courses</div>
+          </div>
+          <div className="text-3xl font-extrabold text-green-600">
+            {totalCourses}
+          </div>
+        </motion.div>
 
-  <motion.div
-    className="bg-white rounded-xl shadow-md p-5 border-l-4 border-blue-500 hover:shadow-lg transition-all duration-300"
-    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-    whileHover={{ y: -6, transition: { duration: 0.2 } }}
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <CheckCircle2Icon size={28} className="text-blue-600" />
-      <div className="text-sm text-gray-600">Present Today</div>
-    </div>
-    <div className="text-3xl font-extrabold text-blue-600">215</div>
-  </motion.div>
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-blue-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <GraduationCapIcon size={32} className="text-blue-600" />
+            <div className="text-md text-gray-600">Total Student</div>
+          </div>
+          <div className="text-3xl font-extrabold text-blue-600">
+            {totalStudents}
+          </div>
+        </motion.div>
 
-  <motion.div
-    className="bg-white rounded-xl shadow-md p-5 border-l-4 border-red-500 hover:shadow-lg transition-all duration-300"
-    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-    whileHover={{ y: -6, transition: { duration: 0.2 } }}
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <XCircleIcon size={28} className="text-red-600" />
-      <div className="text-sm text-gray-600">Absent Today</div>
-    </div>
-    <div className="text-3xl font-extrabold text-red-600">33</div>
-  </motion.div>
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-red-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <UsersIcon size={32} className="text-red-600" />
+            <div className="text-md text-gray-600">Total Teacher</div>
+          </div>
+          <div className="text-3xl font-extrabold text-red-600">
+            {totalTeachers}
+          </div>
+        </motion.div>
 
-  <motion.div
-    className="bg-white rounded-xl shadow-md p-5 border-l-4 border-yellow-500 hover:shadow-lg transition-all duration-300"
-    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-    whileHover={{ y: -6, transition: { duration: 0.2 } }}
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <BarChart2Icon size={28} className="text-yellow-600" />
-      <div className="text-sm text-gray-600">Attendance Rate</div>
-    </div>
-    <div className="text-3xl font-extrabold text-yellow-600">87%</div>
-  </motion.div>
-</motion.div>
-     {/* Tab Navigation */}
-     <motion.div
-  className="mb-6 bg-white rounded-lg shadow p-2 flex flex-wrap sm:flex-nowrap sm:overflow-x-auto gap-2"
-  variants={itemVariants}
-  initial="hidden"
-  animate="visible"
->
-  <TabButton
-    active={activeTab === 'attendance'}
-    onClick={() => setActiveTab('attendance')}
-    label="Attendance"
-  />
-  <TabButton
-    active={activeTab === 'overview'}
-    onClick={() => setActiveTab('overview')}
-    label="Overview"
-  />
-  <TabButton
-    active={activeTab === 'courses'}
-    onClick={() => setActiveTab('courses')}
-    label="Courses"
-  />
-  <TabButton
-    active={activeTab === 'students'}
-    onClick={() => setActiveTab('students')}
-    label="Students"
-  />
-</motion.div>
+        <motion.div
+          className="bg-white rounded-xl shadow-md p-5 border-l-4 border-yellow-500 hover:shadow-lg transition-all duration-300"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <BarChart2Icon size={28} className="text-yellow-600" />
+            <div className="text-sm text-gray-600">Attendance Rate</div>
+          </div>
+          <div className="text-3xl font-extrabold text-yellow-600">87%</div>
+        </motion.div>
+      </motion.div>
+      {/* Tab Navigation */}
+      <motion.div
+        className="mb-6 bg-white rounded-lg shadow p-2 flex flex-wrap sm:flex-nowrap sm:overflow-x-auto gap-2"
+        variants={itemVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <TabButton
+          active={activeTab === "attendance"}
+          onClick={() => setActiveTab("attendance")}
+          label="Attendance"
+        />
+        <TabButton
+          active={activeTab === "overview"}
+          onClick={() => setActiveTab("overview")}
+          label="Overview"
+        />
+        <TabButton
+          active={activeTab === "courses"}
+          onClick={() => setActiveTab("courses")}
+          label="Courses"
+        />
+        <TabButton
+          active={activeTab === "students"}
+          onClick={() => setActiveTab("students")}
+          label="Students"
+        />
+      </motion.div>
 
       {/* Tab Content */}
-     <motion.div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      {activeTab === 'attendance' && (
-        <>
-          <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-lg font-semibold text-gray-800">Today's Attendance</h2>
-            <div className="flex space-x-2">
-        <select
-  className="px-3 py-1 border rounded text-sm"
-  value={selectedCourse}
-  onChange={(e) => {
-    setSelectedCourse(e.target.value);
-    setCurrentPage(1); // reset to first page when filter changes
-  }}
->
-  {courses.map(course => (
-    <option key={course} value={course}>{course}</option>
-  ))}
-</select>
-{/* 
+      <motion.div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        {activeTab === "attendance" && (
+          <>
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Today's Attendance
+              </h2>
+              <div className="flex space-x-2">
+                <select
+                  className="px-3 py-1 border rounded text-sm"
+                  value={selectedCourse}
+                  onChange={(e) => {
+                    setSelectedCourse(e.target.value);
+                    setCurrentPage(1); // reset to first page when filter changes
+                  }}
+                >
+                  {courses.map((course) => (
+                    <option key={course} value={course}>
+                      {course}
+                    </option>
+                  ))}
+                </select>
+                {/* 
               <motion.button className="px-3 py-1 bg-indigo-600 text-white rounded text-sm" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 Export
               </motion.button> */}
+              </div>
             </div>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {currentRecords.map((student, i) => (
-                  <motion.tr key={student} className="hover:bg-gray-50" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                    <td className="px-4 py-3">{student.student_id}</td>
-                    <td className="px-4 py-3">{student.student_name}</td>
-                    <td className="px-4 py-3">{student.course}</td>
-                    <td className="px-4 py-3">
-                      {student.status === "Present" ? (
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Present</span>
-                      ) : (
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Absent</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{student.time}</td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-      
-    
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Student ID
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Course
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Time
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {currentRecords.map((student, i) => (
+                    <motion.tr
+                      key={student}
+                      className="hover:bg-gray-50"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <td className="px-4 py-3">{student.student_id}</td>
+                      <td className="px-4 py-3">{student.student_name}</td>
+                      <td className="px-4 py-3">{student.course}</td>
+                      <td className="px-4 py-3">
+                        {student.status === "Present" ? (
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Present
+                          </span>
+                        ) : (
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            Absent
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-500">
+                        {student.time}
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             <div className="bg-gray-50 px-4 py-3 flex flex-col sm:flex-row items-center justify-between border-t">
               <div className="flex-1 flex justify-between sm:hidden mb-3 w-full">
-                <motion.button className="px-4 py-2 border rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }}>
+                <motion.button
+                  className="px-4 py-2 border rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  whileTap={{
+                    scale: 0.95,
+                  }}
+                >
                   Previous
                 </motion.button>
-                <motion.button className="ml-3 px-4 py-2 border border-indigo-500 rounded text-sm font-medium text-indigo-700 bg-white hover:bg-gray-50" whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }}>
+                <motion.button
+                  className="ml-3 px-4 py-2 border border-indigo-500 rounded text-sm font-medium text-indigo-700 bg-white hover:bg-gray-50"
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  whileTap={{
+                    scale: 0.95,
+                  }}
+                >
                   Next
                 </motion.button>
               </div>
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-               <div>
-  <p className="text-sm text-gray-700">
-    Showing <span className="font-medium">{indexOfFirstRecord + 1}</span> to{' '}
-    <span className="font-medium">{Math.min(indexOfLastRecord, attendanceData.length)}</span> of{' '}
-    <span className="font-medium">{attendanceData.length}</span> results
-  </p>
-</div>
+                <div>
+                  <p className="text-sm text-gray-700">
+                    Showing{" "}
+                    <span className="font-medium">
+                      {indexOfFirstRecord + 1}
+                    </span>{" "}
+                    to{" "}
+                    <span className="font-medium">
+                      {Math.min(indexOfLastRecord, attendanceData.length)}
+                    </span>{" "}
+                    of{" "}
+                    <span className="font-medium">{attendanceData.length}</span>{" "}
+                    results
+                  </p>
+                </div>
 
                 <div>
                   <div className="flex justify-center mt-4 space-x-2">
-  <button
-    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-    className="px-3 py-1 border rounded bg-white text-sm"
-    disabled={currentPage === 1}
-  >
-    Previous
-  </button>
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      className="px-3 py-1 border rounded bg-white text-sm"
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
 
-  {[...Array(totalPages)].map((_, index) => (
-    <button
-      key={index}
-      onClick={() => setCurrentPage(index + 1)}
-      className={`px-3 py-1 border rounded text-sm ${currentPage === index + 1 ? 'bg-indigo-500 text-white' : 'bg-white'}`}
-    >
-      {index + 1}
-    </button>
-  ))}
+                    {[...Array(totalPages)].map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentPage(index + 1)}
+                        className={`px-3 py-1 border rounded text-sm ${
+                          currentPage === index + 1
+                            ? "bg-indigo-500 text-white"
+                            : "bg-white"
+                        }`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
 
-  <button
-    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-    className="px-3 py-1 border rounded bg-white text-sm"
-    disabled={currentPage === totalPages}
-  >
-    Next
-  </button>
-</div>
-
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
+                      className="px-3 py-1 border rounded bg-white text-sm"
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </>)}
-        {activeTab === 'overview' && <Overview />}
-        {activeTab === 'courses' && <Courses />}
-        {activeTab === 'students' && <Student data={data.student_wise} />}
+          </>
+        )}
+        {activeTab === "overview" && <Overview />}
+        {activeTab === "courses" && <Courses />}
+        {activeTab === "students" && <Student data={data.student_wise} />}
       </motion.div>
-    </motion.div>;
+    </motion.div>
+  );
 };
 
 const TabButton = ({ active, onClick, label }) => (
@@ -334,19 +475,14 @@ const TabButton = ({ active, onClick, label }) => (
     className={` flex-1 py-2 px-4 text-sm font-medium rounded-md text-center
     transition-colors duration-200
       ${
-        active 
+        active
           ? "bg-indigo-600 text-white"
           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
       }`}
   >
     {label}
-    </motion.button>
+  </motion.button>
 );
-
-
-
-
-
 
 // Tab Button Component
 // const TabButton = ({ active, onClick, label }) => (

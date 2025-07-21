@@ -1,9 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import Top from '../components/Tabs/Top';
+import { teacher_analysis } from '../Api/internal';
+import Loader from '../components/Custom/Loader';
+import TeacherTop from '../components/Tabs/TeacherTop';
 
 const TeacherDashboard = () => {
-  
+  const [courseData, setCourseData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await teacher_analysis();
+      if (res.status == 200) {
+        setCourseData(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading || courseData == null) {
+    return <Loader />;
+  }
+ 
 
 
 
@@ -46,7 +69,7 @@ const TeacherDashboard = () => {
         </p>
       </motion.div>
 
-     <Top />
+ <TeacherTop  data={courseData.summary_metrics} />
 
 
 

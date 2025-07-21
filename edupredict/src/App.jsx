@@ -21,7 +21,7 @@ import StudentAttendance from "./pages/StudentAttendence";
 import Quiz from "./pages/Quiz";
 import FeedbackTeac from "./pages/FeedbackTeac";
 import Dropout_risk from "./pages/Dropout_risk";
-import  Course_demand  from "./pages/Course_demand";
+import Course_demand from "./pages/Course_demand";
 
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
@@ -94,7 +94,7 @@ export function App() {
                   path="/feedbackteac"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <FeedbackTeac/>
+                      <FeedbackTeac />
                     </AuthLayout>
                   }
                 />
@@ -106,11 +106,11 @@ export function App() {
                     </AuthLayout>
                   }
                 />
-                 <Route
+                <Route
                   path="/feedback"
                   element={
                     <AuthLayout token={"admin"}>
-                      <Feedback/>
+                      <Feedback />
                     </AuthLayout>
                   }
                 />
@@ -146,6 +146,16 @@ export function App() {
                     </AuthLayout>
                   }
                 />
+
+                <Route
+                  path="/settings"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <Setting />
+                    </AuthLayout>
+                  }
+                />
+
                 <Route
                   path="/teacherdashboard"
                   element={
@@ -154,27 +164,27 @@ export function App() {
                     </AuthLayout>
                   }
                 />
-                 <Route
+                <Route
                   path="/feedbacks"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <Feedback/>
+                      <Feedback />
                     </AuthLayout>
                   }
                 />
-                 <Route
+                <Route
                   path="/dropout"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <Dropout_risk/>
+                      <Dropout_risk />
                     </AuthLayout>
                   }
                 />
-                 <Route
+                <Route
                   path="/demands"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <Course_demand/>
+                      <Course_demand />
                     </AuthLayout>
                   }
                 />

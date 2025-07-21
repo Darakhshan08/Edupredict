@@ -161,7 +161,7 @@ export const student_course_wise_analysis = async (id) => {
 export const teacher_analysis = async (course) => {
   let response;
   try {
-    response = await api.get(`/teacher/${course}`);
+    response = await api.get(`/teacher`);
   } catch (error) {
     return error;
   }

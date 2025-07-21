@@ -4,9 +4,12 @@ import {
   UsersIcon,
   CheckCircle2Icon,
   XCircleIcon,
-  BarChart2Icon
+  BarChart2Icon,
+  Award,
+  NotepadText,
+  CalendarClock
 } from "lucide-react";
-const StudentTop = ({ data }) => {
+const TeacherTop = ({data}) => {
   return (
     <>
     <motion.div
@@ -24,10 +27,10 @@ const StudentTop = ({ data }) => {
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
       <div className="flex items-center gap-3 mb-2">
-        <UsersIcon size={28} className="text-green-600" />
-        <div className="text-sm text-gray-600">Total Students</div>
+        <UsersIcon size={32} className="text-green-600" />
+        <div className="text-md text-gray-600">Total Students</div>
       </div>
-      <div className="text-3xl font-extrabold text-green-600">{data?.student_id}</div>
+      <div className="text-3xl font-extrabold text-green-600">{data?.total_students}</div>
     </motion.div>
   
     <motion.div
@@ -36,10 +39,10 @@ const StudentTop = ({ data }) => {
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
       <div className="flex items-center gap-3 mb-2">
-        <CheckCircle2Icon size={28} className="text-blue-600" />
-        <div className="text-sm text-gray-600">Present Today</div>
+        <CalendarClock size={32} className="text-blue-600" />
+        <div className="text-md text-gray-600">Avg_Attendance</div>
       </div>
-      <div className="text-3xl font-extrabold text-blue-600">{data?.avg_attendance}%</div>
+      <div className="text-3xl font-extrabold text-blue-600"> {data?.avg_attendance.toFixed(1)}%</div>
     </motion.div>
   
     <motion.div
@@ -48,10 +51,10 @@ const StudentTop = ({ data }) => {
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
       <div className="flex items-center gap-3 mb-2">
-        <XCircleIcon size={28} className="text-red-600" />
-        <div className="text-sm text-gray-600">Absent Today</div>
+        <Award size={32} className="text-red-600" />
+        <div className="text-md text-gray-600">Assignments</div>
       </div>
-      <div className="text-3xl font-extrabold text-red-600">{data?.avg_gpa}</div>
+      <div className="text-3xl font-extrabold text-red-600">{data?.avg_assignments.toFixed(0)}</div>
     </motion.div>
   
     <motion.div
@@ -60,14 +63,14 @@ const StudentTop = ({ data }) => {
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
       <div className="flex items-center gap-3 mb-2">
-        <BarChart2Icon size={28} className="text-yellow-600" />
-        <div className="text-sm text-gray-600">Attendance Rate</div>
+        <NotepadText size={32} className="text-yellow-600" />
+        <div className="text-md text-gray-600">Quizzes</div>
       </div>
-      <div className="text-3xl font-extrabold text-yellow-600">{data?.avg_quizzes}</div>
+      <div className="text-3xl font-extrabold text-yellow-600">{data?.avg_quizzes.toFixed(0)}</div>
     </motion.div>
   </motion.div>
   </>
   )
 }
 
-export default StudentTop
+export default TeacherTop
