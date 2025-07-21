@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import StudentTop from "../components/Tabs/StudentTop";
+import { useNavigate } from 'react-router-dom';
 import { student_data } from "../Api/internal";
 import Loader from "../components/Custom/Loader";
 const StudentDashboard = () => {
@@ -60,7 +61,9 @@ const StudentDashboard = () => {
     },
   };
   const courses = ["Mathematics", "Science", "English"];
-  const assignments = ["Math Quiz", "Science Report", "English Essay"];
+  const assignments = ["C101", "C102", "C103"];
+  const navigate = useNavigate();
+
   return (
     <motion.div
       className="p-4"
@@ -179,13 +182,13 @@ const StudentDashboard = () => {
         >
           <h2 className="text-xl font-semibold mb-4 flex items-center">
             <span className="inline-block w-3 h-3 bg-amber-500 rounded-full mr-2"></span>
-            Upcoming Assignments
+            Quizzes
           </h2>
           <ul className="divide-y space-y-1">
             {assignments.map((assignment, i) => (
               <motion.li
                 key={i}
-                className="py-3 flex justify-between items-center"
+                className="py-3 flex justify-center items-center"
                 initial={{
                   opacity: 0,
                   x: -20,
@@ -217,20 +220,8 @@ const StudentDashboard = () => {
                   <span className="font-medium">{assignment}</span>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-sm text-gray-500 mr-3">
-                    Due in {i + 1} days
-                  </span>
-                  <motion.button
-                    className="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-md hover:bg-amber-200 transition-colors duration-200"
-                    whileHover={{
-                      scale: 1.05,
-                    }}
-                    whileTap={{
-                      scale: 0.95,
-                    }}
-                  >
-                    Start
-                  </motion.button>
+                  
+               
                 </div>
               </motion.li>
             ))}
@@ -247,17 +238,14 @@ const StudentDashboard = () => {
               delay: 0.5,
             }}
           >
-            <motion.button
-              className="w-full px-4 py-2 bg-amber-50 text-amber-600 rounded-md hover:bg-amber-100 transition-colors duration-200 text-sm font-medium"
-              whileHover={{
-                scale: 1.01,
-              }}
-              whileTap={{
-                scale: 0.99,
-              }}
-            >
-              View All Assignments
-            </motion.button>
+              <motion.button
+      className="w-full px-4 py-2 bg-amber-50 text-amber-600 rounded-md hover:bg-amber-100 transition-colors duration-200 text-sm font-medium"
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={() => navigate('/studentquiz')} // update route as needed
+    >
+      View All Assignments
+    </motion.button>
           </motion.div>
         </motion.div>
         <motion.div
