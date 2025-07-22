@@ -27,29 +27,43 @@ exports.protect = (roles = []) => {
 };
 
 // ✅ Logout handler
+
 exports.logout = async (req, res) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "No token to logout" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
   try {
-    // ✅ Decode the token to get the user ID
-    const decoded = jwt.verify(token, "your_jwt_secret"); // use same secret as login
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided in Authorization header" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // Check if token is already blacklisted
+    if (blacklist.includes(token)) {
+      return res.status(401).json({ message: "Token already logged out" });
+    }
+
+    // Verify the token
+    const decoded = jwt.verify(token, "your_jwt_secret"); // same secret used when signing
+
     const userId = decoded.id;
 
-    // ✅ Update isActive = false in the DB
+    // Optional: verify the role (if needed)
+    const user = await Users.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Mark user as inactive
     await Users.findByIdAndUpdate(userId, { isActive: false });
 
-    // ✅ Blacklist the token
+    // Add token to blacklist
     blacklist.push(token);
 
-    res.json({ message: "Logged out successfully" });
+    return res.status(200).json({ message: `${user.role} logged out successfully` });
+
   } catch (err) {
-    res.status(401).json({ message: "Invalid token", error: err.message });
+    return res.status(401).json({ message: "Invalid or expired token", error: err.message });
   }
 };
-
