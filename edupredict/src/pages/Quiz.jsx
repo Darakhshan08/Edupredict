@@ -42,7 +42,7 @@ function Quiz() {
                   Quiz Performance
                 </h1>
                 <p className="text-sm md:text-base text-gray-500">
-                  Total quizzes 
+                  Total quizzes
                 </p>
               </div>
               <div className="flex gap-3 w-full sm:w-auto">
@@ -71,8 +71,9 @@ function Quiz() {
                     height={50}
                   />
                   <YAxis
-                    domain={[0, 40]}
-                    ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]} allowDecimals={false}
+                    domain={[0, 45]}
+                    ticks={[0, 10, 20, 30, 40, 50]}
+                    allowDecimals={false}
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#888', fontSize: 12 }}
@@ -109,7 +110,7 @@ function Quiz() {
               Quiz Breakdown
             </h2>
             <p className="text-sm md:text-base text-gray-600 mb-6">
-              Total quizzes 
+              Total quizzes
             </p>
             <div className="bg-gray-50 rounded-lg p-4">
               <table className="w-full border-collapse">
