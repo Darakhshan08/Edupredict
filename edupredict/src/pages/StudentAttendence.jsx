@@ -78,13 +78,14 @@ function StudentAttendance() {
               </button>
             </div>
           </div>
-          <div className="h-64">
+          <div className="h-[200px] md:h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <CartesianGrid  strokeDasharray="3 3"
+                    vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} domain={[0, 20]} ticks={[0, 5, 10, 15, 20]} />
                 <Tooltip />

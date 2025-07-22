@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -7,31 +7,32 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
-} from 'recharts'
-import { DownloadIcon } from 'lucide-react'
-import axios from 'axios'
+} from "recharts";
+import { DownloadIcon } from "lucide-react";
+import axios from "axios";
 
 function Quiz() {
-  const [quizData, setQuizData] = useState([])
+  const [quizData, setQuizData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/quiz-summary')
+    axios
+      .get("http://localhost:3001/quiz-summary")
       .then((res) => {
         const formatted = res.data.map((item) => ({
           name: item.course_id,
           total: item.quizzes_completed,
           maxScore: 20,
           score: item.quizzes_completed,
-        }))
-        setQuizData(formatted)
+        }));
+        setQuizData(formatted);
       })
       .catch((err) => {
-        console.error('Failed to fetch quiz data:', err)
-      })
-  }, [])
+        console.error("Failed to fetch quiz data:", err);
+      });
+  }, []);
 
   return (
-    <div className="flex w-full min-h-screen bg-[#f8f8ee] justify-center items-center p-4">
+    <div className="flex w-full min-h-screen justify-center items-center p-4">
       <div className="w-full max-w-7xl bg-white rounded-xl p-6 md:p-10 shadow-sm">
         <div className="flex flex-col gap-8">
           {/* Chart Section */}
@@ -52,7 +53,7 @@ function Quiz() {
                 </button>
               </div>
             </div>
-            <div className="h-[300px] md:h-[400px] w-full">
+            <div className="h-[300px] md:h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={quizData}
@@ -63,20 +64,14 @@ function Quiz() {
                     vertical={false}
                     stroke="#eaeaea"
                   />
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: '#888', fontSize: 12 }}
-                    height={50}
-                  />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                   <YAxis
                     domain={[0, 45]}
                     ticks={[0, 10, 20, 30, 40, 50]}
                     allowDecimals={false}
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#888', fontSize: 12 }}
+                    tick={{ fill: "#888", fontSize: 12 }}
                   />
                   <Tooltip
                     content={({ active, payload }) => {
@@ -88,16 +83,16 @@ function Quiz() {
                             </p>
                             <p>Total quizzes: {payload[0].payload.total}</p>
                           </div>
-                        )
+                        );
                       }
-                      return null
+                      return null;
                     }}
                   />
                   <Bar
                     dataKey="score"
                     fill="#a78bfa"
                     radius={[4, 4, 0, 0]}
-                    barSize={40}
+                    barSize={100}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -145,7 +140,7 @@ function Quiz() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Quiz
+export default Quiz;
