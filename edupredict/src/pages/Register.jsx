@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpenIcon, GraduationCapIcon, UserIcon } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { register } from '../Api/auth';
 
 function Register() {
@@ -13,9 +15,6 @@ function Register() {
     courses: '',
   });
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,8 +25,6 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
     const payload = {
       name: formData.name,
@@ -38,14 +35,11 @@ function Register() {
       ...(formData.role === 'teacher' && formData.courses.trim() && { courses: formData.courses.trim() }),
     };
 
-    console.log('Submitting payload:', payload); // Debugging
-
     try {
       const res = await register(payload);
-      console.log('API response:', res); // Debugging
 
       if (res?.status === 201) {
-        setSuccess('Account created successfully!');
+        toast.success('Account created successfully!');
         setFormData({
           name: '',
           email: '',
@@ -55,17 +49,17 @@ function Register() {
           courses: '',
         });
       } else {
-        setError(res?.data?.error || res?.data?.message || 'Registration failed.');
+        toast.error(res?.data?.error || res?.data?.message || 'Registration failed.');
       }
     } catch (err) {
       console.error('Registration error:', err);
-      setError('Something went wrong. Please try again later.');
+      toast.error('Something went wrong. Please try again later.');
     }
   };
 
   return (
     <div className="flex w-full min-h-screen bg-gray-50">
-      {/* Left side panel */}
+      {/* Left Panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-800 p-12 flex-col justify-between">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -112,7 +106,7 @@ function Register() {
         <div className="text-white/60 text-sm">© 2025 EduPredict. All rights reserved.</div>
       </div>
 
-      {/* Right form panel */}
+      {/* Right Form Panel */}
       <div className="w-full md:w-3/5 px-6 md:px-16 py-12 flex flex-col justify-center">
         <div className="w-full max-w-md mx-auto">
           <div className="mb-10">
@@ -120,16 +114,8 @@ function Register() {
             <p className="text-gray-600">Create your account to get started</p>
           </div>
 
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-              {success}
-            </div>
-          )}
+          {/* Toast Notifications */}
+          <ToastContainer position="top-right" autoClose={3000} hideProgressBar newestOnTop />
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}

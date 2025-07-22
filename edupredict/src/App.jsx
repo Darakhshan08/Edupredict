@@ -23,6 +23,7 @@ import FeedbackTeac from "./pages/FeedbackTeac";
 import Dropout_risk from "./pages/Dropout_risk";
 import  Course_demand  from "./pages/Course_demand";
 import Stdperform from "./pages/Stdperform";
+import { ToastContainer } from "react-toastify";
 import StudentAnalysis from "./pages/StudentAnalysis";
 
 
@@ -44,6 +45,7 @@ export function App() {
   return (
     <>
       <BrowserRouter>
+      <ToastContainer position="top-right" autoClose={3000} />
         <div className="flex flex-col h-screen">
           <AnimatePresence mode="wait">
             <Layout>

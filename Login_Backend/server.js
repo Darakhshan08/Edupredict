@@ -44,7 +44,6 @@ app.get("/api/teacher", protect(["teacher"]), (req, res) => {
 });
 
 connectDB().then(() => {
-   seedAdmin();
   app.listen(PORT, console.log(`Backend is running on the ${PORT}`));
 });
 
