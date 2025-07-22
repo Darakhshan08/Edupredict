@@ -23,6 +23,8 @@ import FeedbackTeac from "./pages/FeedbackTeac";
 import Dropout_risk from "./pages/Dropout_risk";
 import  Course_demand  from "./pages/Course_demand";
 import Stdperform from "./pages/Stdperform";
+import StudentAnalysis from "./pages/StudentAnalysis";
+
 
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
@@ -136,6 +138,14 @@ export function App() {
                   element={
                     <AuthLayout token={"student"}>
                       <StudentDashboard />
+                    </AuthLayout>
+                  }
+                />
+                     <Route
+                  path="/analysis"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <StudentAnalysis />
                     </AuthLayout>
                   }
                 />

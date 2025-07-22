@@ -23,6 +23,15 @@ export const getAttendenceStudentIDandCourse = async (
   return response;
 };
 
+export const predictStudentPerformance = async (studentData) => {
+  try {
+    const response = await api.post(`/predict_user`, studentData)
+    return response.data
+  } catch (error) {
+    console.error('Error predicting student performance:', error)
+    throw error
+  }
+}
 
 export const fetch_attendance_table = async () => {
   let response;
