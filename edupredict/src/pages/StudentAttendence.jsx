@@ -79,20 +79,27 @@ function StudentAttendance() {
             </div>
           </div>
           <div className="h-[200px] md:h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid  strokeDasharray="3 3"
-                    vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} domain={[0, 20]} ticks={[0, 5, 10, 15, 20]} />
-                <Tooltip />
-                <Bar dataKey="present" fill="#b389f7" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="absent" fill="#e9b6e0" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%">
+  <BarChart
+    data={chartData}
+    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+  >
+    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+    <YAxis
+      tick={{ fontSize: 12 }}
+      domain={[0, 700]}
+      ticks={[0, 100, 200, 300, 400, 500, 600, 700]}
+      allowDecimals={false}
+      axisLine={false}
+      tickLine={false}
+    />
+    <Tooltip />
+    <Bar dataKey="present" fill="#b389f7" radius={[4, 4, 0, 0]} />
+    <Bar dataKey="absent" fill="#e9b6e0" radius={[4, 4, 0, 0]} />
+  </BarChart>
+</ResponsiveContainer>
+
           </div>
         </div>
 

@@ -54,48 +54,49 @@ function Quiz() {
               </div>
             </div>
             <div className="h-[300px] md:h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={quizData}
-                  margin={{ top: 20, right: 10, left: 0, bottom: 40 }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#eaeaea"
-                  />
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis
-                    domain={[0, 45]}
-                    ticks={[0, 10, 20, 30, 40, 50]}
-                    allowDecimals={false}
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#888", fontSize: 12 }}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="bg-white border shadow p-2 rounded text-sm text-gray-700">
-                            <p className="font-semibold">
-                              Course: {payload[0].payload.name}
-                            </p>
-                            <p>Total quizzes: {payload[0].payload.total}</p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar
-                    dataKey="score"
-                    fill="#a78bfa"
-                    radius={[4, 4, 0, 0]}
-                    barSize={100}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
+  <BarChart
+    data={quizData}
+    margin={{ top: 20, right: 10, left: 0, bottom: 40 }}
+  >
+    <CartesianGrid
+      strokeDasharray="3 3"
+      vertical={false}
+      stroke="#eaeaea"
+    />
+    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+    <YAxis
+      domain={[0, 1000]}
+      ticks={[0, 200, 400, 600, 800, 1000]}
+      allowDecimals={false}
+      axisLine={false}
+      tickLine={false}
+      tick={{ fill: "#888", fontSize: 12 }}
+    />
+    <Tooltip
+      content={({ active, payload }) => {
+        if (active && payload && payload.length) {
+          return (
+            <div className="bg-white border shadow p-2 rounded text-sm text-gray-700">
+              <p className="font-semibold">
+                Course: {payload[0].payload.name}
+              </p>
+              <p>Total quizzes: {payload[0].payload.total}</p>
+            </div>
+          );
+        }
+        return null;
+      }}
+    />
+    <Bar
+      dataKey="score"
+      fill="#a78bfa"
+      radius={[4, 4, 0, 0]}
+      barSize={100}
+    />
+  </BarChart>
+</ResponsiveContainer>
+
             </div>
           </div>
 
