@@ -24,12 +24,17 @@ import {
   Settings,
   Users,
   UserX,
+  MegaphoneIcon,
+  BellIcon,
 } from "lucide-react";
 import Feedbackform from "./../pages/Feedbackform";
+import AnnounceForm from "../pages/AnnounceForm";
+import NotificationPopup from "../pages/Notifications";
 
 const Sidebar = () => {
   const isTabletMid = window.innerWidth <= 768;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [open, setOpen] = useState(!isTabletMid);
   const sidebarRef = useRef(null);
   const { pathname } = useLocation();
@@ -134,7 +139,7 @@ const Sidebar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-             <BookOpenIcon size={35} className="text-white"    />
+              <BookOpenIcon size={35} className="text-white" />
             </motion.div>
             <AnimatePresence>
               {open && (
@@ -218,6 +223,29 @@ const Sidebar = () => {
                     Feedback
                   </NavLink>
                 </motion.li>
+
+                <motion.li variants={itemVariants}>
+                  <NavLink
+                    to="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsModalOpen(true);
+                    }}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <MegaphoneIcon size={30} /> {/* <-- Replaced MessageSquare with Megaphone */}
+                    {open && <span>Make Announcement</span>}
+                  </NavLink>
+                </motion.li>
+                {isModalOpen && (
+                  <AnnounceForm onClose={() => setIsModalOpen(false)} />
+                )}
+
                 <motion.li variants={itemVariants}>
                   <NavLink
                     to="/setting"
@@ -249,10 +277,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/studentdashboard"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -279,10 +306,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/studentattendance"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -295,10 +321,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/studentquiz"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -311,10 +336,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/assignment"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -327,10 +351,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/analysis"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -348,29 +371,51 @@ const Sidebar = () => {
                       setIsModalOpen(true);
                     }}
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
                     <MessageSquare size={30} />
                     {open && <span>Send Feedback</span>}
                   </NavLink>
-                </motion.li>
+                </ motion.li>
                 {isModalOpen && (
                   <Feedbackform onClose={() => setIsModalOpen(false)} />
                 )}
+
+
+                <motion.li variants={itemVariants}>
+                  <NavLink
+                    to="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsNotificationOpen(true);
+                    }}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive ? "sidebar-link-active font-bold" : "hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <BellIcon size={30} />
+                    {open && <span>Notifications</span>}
+                  </NavLink>
+                </motion.li>
+
+
+                {isNotificationOpen && (
+                  <NotificationPopup onClose={() => setIsNotificationOpen(false)} />
+                )}
+
 
                 <motion.li variants={itemVariants}>
                   <NavLink
                     to="/settings"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -400,10 +445,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/teacherdashboard"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -416,10 +460,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/dropout"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -432,10 +475,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/stdperformance"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -448,10 +490,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/demands"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -464,10 +505,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/feedbackteac"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -480,10 +520,9 @@ const Sidebar = () => {
                   <NavLink
                     to="/stdhistory"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
@@ -494,12 +533,34 @@ const Sidebar = () => {
 
                 <motion.li variants={itemVariants}>
                   <NavLink
+                    to="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsNotificationOpen(true);
+                    }}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive ? "sidebar-link-active font-bold" : "hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <BellIcon size={30} />
+                    {open && <span>Notifications</span>}
+                  </NavLink>
+                </motion.li>
+
+
+                {isNotificationOpen && (
+                  <NotificationPopup onClose={() => setIsNotificationOpen(false)} />
+                )}
+
+
+                <motion.li variants={itemVariants}>
+                  <NavLink
                     to="/settingteacher"
                     className={({ isActive }) =>
-                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive
-                          ? "sidebar-link-active font-bold"
-                          : "hover:bg-gray-100"
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${isActive
+                        ? "sidebar-link-active font-bold"
+                        : "hover:bg-gray-100"
                       }`
                     }
                   >
