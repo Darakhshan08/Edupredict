@@ -22,6 +22,24 @@ export const StudentForm = ({ setPrediction, setLoading, setError }) => {
       [name]: type === 'number' ? parseFloat(value) : value,
     })
   }
+
+const saveToHistory = (studentData, prediction) => {
+    // Get existing history or initialize empty array
+    const existingHistory = JSON.parse(localStorage.getItem('studentHistory') || '[]')
+    // Create history entry with timestamp
+    const historyEntry = {
+      student_id: studentData.student_id,
+      student_name: studentData.student_name,
+      gpa: studentData.gpa,
+      date: new Date().toISOString(),
+      prediction: prediction
+    }
+    // Add to history and save back to localStorage
+    const updatedHistory = [historyEntry, ...existingHistory]
+    localStorage.setItem('studentHistory', JSON.stringify(updatedHistory))
+  }
+
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -29,6 +47,8 @@ export const StudentForm = ({ setPrediction, setLoading, setError }) => {
     try {
       const result = await predictStudentPerformance(formData)
       setPrediction(result)
+        // Save to localStorage
+      saveToHistory(formData, result)
     } catch (err) {
       setError('Failed to get prediction. Please try again.')
       console.error(err)

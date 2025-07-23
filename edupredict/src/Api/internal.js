@@ -171,6 +171,18 @@ export const student_course_wise_analysis = async (id) => {
   }
   return response;
 };
+
+// services.js ya api.js me add karein
+export const fetch_assignment_summary = async () => {
+  let response;
+  try {
+    response = await api.get(`/assignment-summary`);
+  } catch (error) {
+    return error;
+  }
+  return response;
+};
+
 export const teacher_analysis = async (course) => {
   let response;
   try {

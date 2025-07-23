@@ -25,6 +25,8 @@ import  Course_demand  from "./pages/Course_demand";
 import Stdperform from "./pages/Stdperform";
 import { ToastContainer } from "react-toastify";
 import StudentAnalysis from "./pages/StudentAnalysis";
+import StudentHistory from "./pages/StudentHistory";
+import Assignment from "./pages/Assignment";
 
 
 export function App() {
@@ -103,6 +105,14 @@ export function App() {
                     </AuthLayout>
                   }
                 />
+                    <Route
+                  path="/history"
+                  element={
+                    <AuthLayout token={"admin"}>
+                      <StudentHistory />
+                    </AuthLayout>
+                  }
+                />
                 <Route
                   path="/feedbackteac"
                   element={
@@ -167,6 +177,22 @@ export function App() {
                     </AuthLayout>
                   }
                 />
+                <Route
+                  path="/assignment"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <Assignment  />
+                    </AuthLayout>
+                  }
+                />
+                  {/* <Route
+                  path="/history"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <StudentHistory />
+                    </AuthLayout>
+                  }
+                /> */}
                 <Route
                   path="/teacherdashboard"
                   element={
