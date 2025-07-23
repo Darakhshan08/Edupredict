@@ -75,7 +75,7 @@ function Stdperform() {
                     }}
                   ></div>
                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-gray-700">
-                    {item.student_count} Students
+                    {item.percentage}% Students
                   </div>
                 </div>
               </div>
@@ -115,7 +115,7 @@ function Stdperform() {
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Student Id</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Name</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Predicted performance</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Percentage</th>
+                  {/* <th className="text-left py-3 px-4 font-medium text-gray-600">Percentage</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -132,7 +132,7 @@ function Stdperform() {
                         <td className="py-3 px-4 text-gray-800">{student["Student ID"]}</td>
                         <td className="py-3 px-4 text-gray-800">{student["Name"]}</td>
                         <td className="py-3 px-4 text-gray-800">{student["Predicted_performance"]}</td>
-                        <td className="py-3 px-4 text-gray-800">{student["Percentage"]}%</td>
+                        {/* <td className="py-3 px-4 text-gray-800">{student["Percentage"]}%</td> */}
                       </motion.tr>
                     ))}
                 </AnimatePresence>
