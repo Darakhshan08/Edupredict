@@ -9,14 +9,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { DownloadIcon, ChevronDownIcon } from "lucide-react";
-import { attendance_course_performance } from "../Api/internal"; 
-import Loader from "../components/Custom/Loader"; 
+import { attendance_course_performance } from "../Api/internal";
+import Loader from "../components/Custom/Loader";
 
 function StudentAttendance() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  
   const fetchdata = async () => {
     setLoading(true);
     const response = await attendance_course_performance();
@@ -48,7 +47,7 @@ function StudentAttendance() {
 
     return {
       name: course,
-      completed: "Ongoing", 
+      completed: "Ongoing",
       present,
       absent,
       percentage,
@@ -66,40 +65,37 @@ function StudentAttendance() {
                 Attendance Performance
               </h2>
               <p className="text-gray-600">
-                Monthly overview of total attendance scores by course
+              Overview of total attendance by course
               </p>
             </div>
-            <div className="flex gap-2 relative">
-           
-            
+            {/* <div className="flex gap-2 relative">
               <button className="flex items-center px-4 py-2 bg-[#f7f9e6] text-gray-700 rounded-md border border-gray-200">
                 <DownloadIcon className="mr-2 h-4 w-4" />
                 <span>Download</span>
               </button>
-            </div>
+            </div> */}
           </div>
           <div className="h-[200px] md:h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-  <BarChart
-    data={chartData}
-    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-  >
-    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-    <YAxis
-      tick={{ fontSize: 12 }}
-      domain={[0, 700]}
-      ticks={[0, 100, 200, 300, 400, 500, 600, 700]}
-      allowDecimals={false}
-      axisLine={false}
-      tickLine={false}
-    />
-    <Tooltip />
-    <Bar dataKey="present" fill="#b389f7" radius={[4, 4, 0, 0]} />
-    <Bar dataKey="absent" fill="#e9b6e0" radius={[4, 4, 0, 0]} />
-  </BarChart>
-</ResponsiveContainer>
-
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={chartData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                <YAxis
+                  tick={{ fontSize: 12 }}
+                  domain={[0, 700]}
+                  ticks={[0, 100, 200, 300, 400, 500, 600, 700]}
+                  allowDecimals={false}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip />
+                <Bar dataKey="present" fill="#b389f7" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="absent" fill="#e9b6e0" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -109,23 +105,35 @@ function StudentAttendance() {
             Attendance Breakdown
           </h2>
           <p className="text-gray-600 mb-6">
-            Detailed attendance scores for each course 
+            Detailed attendance for each course
           </p>
           <div className="overflow-x-auto">
             <table className="min-w-full border border-gray-300">
               <thead>
                 <tr>
-                  <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">Course</th>
-                  <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">Present</th>
-                  <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">Absent</th>
+                  <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">
+                    Course
+                  </th>
+                  <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">
+                    Present
+                  </th>
+                  <th className="py-3 px-4 text-left text-gray-600 font-medium border border-gray-300">
+                    Absent
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {attendanceData.map((item, index) => (
                   <tr key={index}>
-                    <td className="py-3 px-4 text-gray-800 border border-gray-300">{item.name}</td>
-                    <td className="py-3 px-4 text-gray-800 border border-gray-300">{item.present}</td>
-                    <td className="py-3 px-4 text-gray-800 border border-gray-300">{item.absent}</td>
+                    <td className="py-3 px-4 text-gray-800 border border-gray-300">
+                      {item.name}
+                    </td>
+                    <td className="py-3 px-4 text-gray-800 border border-gray-300">
+                      {item.present}
+                    </td>
+                    <td className="py-3 px-4 text-gray-800 border border-gray-300">
+                      {item.absent}
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -10,11 +10,14 @@ import {
 } from 'recharts'
 import { DownloadIcon } from 'lucide-react'
 import { fetch_assignment_summary } from '../Api/internal' // <-- yahan import karein
+import Loader from '../components/Custom/Loader'
 
 function Assignments() {
   const [assignmentData, setAssignmentData] = useState([])
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     // Internal API function use karein
     fetch_assignment_summary()
       .then((res) => {
@@ -25,11 +28,13 @@ function Assignments() {
           score: item.assignments_completed,
         }))
         setAssignmentData(formatted)
+        setLoading(false);
       })
       .catch((err) => {
         console.error('Failed to fetch assignment data:', err)
       })
   }, [])
+  if (loading || !assignmentData) return <Loader />;
 
   return (
     <div className="flex w-full min-h-screen justify-center items-center p-4">
@@ -46,12 +51,12 @@ function Assignments() {
                   Total assignments completed
                 </p>
               </div>
-              <div className="flex gap-3 w-full sm:w-auto">
+              {/* <div className="flex gap-3 w-full sm:w-auto">
                 <button className="flex items-center justify-center gap-2 px-4 py-2 border rounded-md bg-white text-gray-700 w-full sm:w-auto">
                   <DownloadIcon size={16} />
                   <span>Download</span>
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className="h-[300px] md:h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -98,7 +103,7 @@ function Assignments() {
                     dataKey="score"
                     fill="#a78bfa"
                     radius={[4, 4, 0, 0]}
-                    barSize={40}
+                    barSize={100}
                   />
                 </BarChart>
               </ResponsiveContainer>

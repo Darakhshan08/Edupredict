@@ -21,13 +21,12 @@ import StudentAttendance from "./pages/StudentAttendence";
 import Quiz from "./pages/Quiz";
 import FeedbackTeac from "./pages/FeedbackTeac";
 import Dropout_risk from "./pages/Dropout_risk";
-import  Course_demand  from "./pages/Course_demand";
+import Course_demand from "./pages/Course_demand";
 import Stdperform from "./pages/Stdperform";
 import { ToastContainer } from "react-toastify";
 import StudentAnalysis from "./pages/StudentAnalysis";
 import StudentHistory from "./pages/StudentHistory";
 import Assignment from "./pages/Assignment";
-
 
 export function App() {
   // For demo purposes, we'll add state to toggle between user roles
@@ -47,7 +46,7 @@ export function App() {
   return (
     <>
       <BrowserRouter>
-      <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={3000} />
         <div className="flex flex-col h-screen">
           <AnimatePresence mode="wait">
             <Layout>
@@ -64,14 +63,7 @@ export function App() {
                     </AuthLayout>
                   }
                 />
-                <Route
-                  path="/stdperformance"
-                  element={
-                    <AuthLayout token={"teacher"}>
-                      <Stdperform/>
-                    </AuthLayout>
-                  }
-                />
+
                 <Route
                   path="/prediction"
                   element={
@@ -88,24 +80,8 @@ export function App() {
                     </AuthLayout>
                   }
                 />
+              
                 <Route
-                  path="/dataset"
-                  element={
-                    <AuthLayout token={"admin"}>
-                      <Dataset />
-                    </AuthLayout>
-                  }
-                />
-
-                <Route
-                  path="/lms"
-                  element={
-                    <AuthLayout token={"admin"}>
-                      <LMS />
-                    </AuthLayout>
-                  }
-                />
-                    <Route
                   path="/history"
                   element={
                     <AuthLayout token={"admin"}>
@@ -117,23 +93,16 @@ export function App() {
                   path="/feedbackteac"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <FeedbackTeac/>
+                      <FeedbackTeac />
                     </AuthLayout>
                   }
                 />
+               
                 <Route
-                  path="/demographics"
-                  element={
-                    <AuthLayout token={"admin"}>
-                      <Demographics />
-                    </AuthLayout>
-                  }
-                />
-                 <Route
                   path="/feedback"
                   element={
                     <AuthLayout token={"admin"}>
-                      <Feedback/>
+                      <Feedback />
                     </AuthLayout>
                   }
                 />
@@ -145,6 +114,9 @@ export function App() {
                     </AuthLayout>
                   }
                 />
+
+                {/* ========================Student Routes ============================== */}
+
                 <Route
                   path="/studentdashboard"
                   element={
@@ -153,14 +125,7 @@ export function App() {
                     </AuthLayout>
                   }
                 />
-                     <Route
-                  path="/analysis"
-                  element={
-                    <AuthLayout token={"student"}>
-                      <StudentAnalysis />
-                    </AuthLayout>
-                  }
-                />
+
                 <Route
                   path="/studentattendance"
                   element={
@@ -181,18 +146,29 @@ export function App() {
                   path="/assignment"
                   element={
                     <AuthLayout token={"student"}>
-                      <Assignment  />
+                      <Assignment />
                     </AuthLayout>
                   }
                 />
-                  {/* <Route
-                  path="/history"
+                <Route
+                  path="/analysis"
                   element={
                     <AuthLayout token={"student"}>
-                      <StudentHistory />
+                      <StudentAnalysis />
                     </AuthLayout>
                   }
-                /> */}
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <AuthLayout token={"student"}>
+                      <Setting />
+                    </AuthLayout>
+                  }
+                />
+
+                {/* ========================Teacher Routes ============================== */}
+
                 <Route
                   path="/teacherdashboard"
                   element={
@@ -201,32 +177,53 @@ export function App() {
                     </AuthLayout>
                   }
                 />
-                 <Route
-                  path="/feedbacks"
-                  element={
-                    <AuthLayout token={"teacher"}>
-                      <Feedback/>
-                    </AuthLayout>
-                  }
-                />
-                 <Route
+                <Route
                   path="/dropout"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <Dropout_risk/>
+                      <Dropout_risk />
                     </AuthLayout>
                   }
                 />
-                 <Route
+
+                <Route
+                  path="/stdperformance"
+                  element={
+                    <AuthLayout token={"teacher"}>
+                      <Stdperform />
+                    </AuthLayout>
+                  }
+                />
+
+                <Route
                   path="/demands"
                   element={
                     <AuthLayout token={"teacher"}>
-                      <Course_demand/>
+                      <Course_demand />
                     </AuthLayout>
                   }
                 />
+
                 <Route
-                  path="/settings"
+                  path="/feedbacks"
+                  element={
+                    <AuthLayout token={"teacher"}>
+                      <Feedback />
+                    </AuthLayout>
+                  }
+                />
+
+                <Route
+                  path="/stdhistory"
+                  element={
+                    <AuthLayout token={"teacher"}>
+                      <StudentHistory />
+                    </AuthLayout>
+                  }
+                />
+
+                <Route
+                  path="/settingteacher"
                   element={
                     <AuthLayout token={"teacher"}>
                       <Setting />

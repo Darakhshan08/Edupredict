@@ -192,7 +192,7 @@ const TeacherDashboard = () => {
             </motion.button>
           </motion.div>
         </motion.div>
-        <motion.div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 lg:col-span-2" variants={itemVariants}>
+        {/* <motion.div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 lg:col-span-2" variants={itemVariants}>
           <h2 className="text-xl font-semibold mb-4 flex items-center">
             <span className="inline-block w-3 h-3 bg-amber-500 rounded-full mr-2"></span>
             Quick Actions
@@ -227,7 +227,7 @@ const TeacherDashboard = () => {
                 <div className="font-medium text-sm">{action.title}</div>
               </motion.div>)}
           </div>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </motion.div>;
 };

@@ -185,10 +185,10 @@ const Attendance = () => {
     >
       <motion.div className="mb-6" variants={itemVariants}>
         <h1 className="text-2xl font-bold text-gray-800 mb-1">
-          Attendance Management
+          Admin Dashboard
         </h1>
         <p className="text-gray-600">
-          Track and monitor student attendance records
+        📊 Easily track and monitor student attendance to ensure academic engagement.
         </p>
       </motion.div>
       <motion.div

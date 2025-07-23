@@ -1,18 +1,22 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { IoIosArrowBack } from 'react-icons/io';
-import { AiOutlineAppstore, AiOutlineHome } from 'react-icons/ai';
-import { BsPerson } from 'react-icons/bs';
-import { TbReportAnalytics } from 'react-icons/tb';
-import { GrPieChart } from 'react-icons/gr';
-import { MdMenu } from 'react-icons/md';
-import { RiLoginBoxLine } from 'react-icons/ri';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { IoIosArrowBack } from "react-icons/io";
+import { AiOutlineAppstore, AiOutlineHome } from "react-icons/ai";
+import { BsPerson } from "react-icons/bs";
+import { TbReportAnalytics } from "react-icons/tb";
+import { GrPieChart } from "react-icons/gr";
+import { MdMenu } from "react-icons/md";
+import { RiLoginBoxLine } from "react-icons/ri";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Award,
   Book,
+  BookOpenIcon,
   CalendarClock,
   ChartColumnBig,
+  ChartLine,
+  ChartSpline,
+  History,
   LayoutDashboard,
   LogOut,
   MessageSquare,
@@ -20,8 +24,8 @@ import {
   Settings,
   Users,
   UserX,
-} from 'lucide-react';
-import Feedbackform from './../pages/Feedbackform';
+} from "lucide-react";
+import Feedbackform from "./../pages/Feedbackform";
 
 const Sidebar = () => {
   const isTabletMid = window.innerWidth <= 768;
@@ -33,26 +37,30 @@ const Sidebar = () => {
 
   useEffect(() => {
     const handleResize = () => setOpen(window.innerWidth > 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
     if (isTabletMid) setOpen(false);
   }, [pathname]);
 
-  const admin_token = localStorage.getItem('admin');
-  const teacher_token = localStorage.getItem('teacher');
-  const student_token = localStorage.getItem('student');
+  const admin_token = localStorage.getItem("admin");
+  const teacher_token = localStorage.getItem("teacher");
+  const student_token = localStorage.getItem("student");
 
   const Nav_animation = {
-    open: { x: 0, width: '16rem', transition: { damping: 40 } },
+    open: { x: 0, width: "16rem", transition: { damping: 40 } },
     closed: { x: -250, width: 0, transition: { damping: 40, delay: 0.15 } },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, x: -20 },
-    show: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", stiffness: 300, damping: 24 },
+    },
   };
 
   const containerVariants = {
@@ -60,50 +68,48 @@ const Sidebar = () => {
     show: { opacity: 1, transition: { staggerChildren: 0.05 } },
   };
 
- const handleLogout = async () => {
-  try {
-    // Get raw token from localStorage
-    const rawToken =
-      localStorage.getItem('admin') ||
-      localStorage.getItem('teacher') ||
-      localStorage.getItem('student');
+  const handleLogout = async () => {
+    try {
+      // Get raw token from localStorage
+      const rawToken =
+        localStorage.getItem("admin") ||
+        localStorage.getItem("teacher") ||
+        localStorage.getItem("student");
 
-    if (!rawToken) return console.error('No token found in storage');
+      if (!rawToken) return console.error("No token found in storage");
 
-    // Handle both string and JSON object format
-    const token = rawToken.startsWith('{')
-      ? JSON.parse(rawToken).token
-      : rawToken;
+      // Handle both string and JSON object format
+      const token = rawToken.startsWith("{")
+        ? JSON.parse(rawToken).token
+        : rawToken;
 
-    if (!token) return console.error('Invalid token format');
+      if (!token) return console.error("Invalid token format");
 
-    const res = await fetch('http://localhost:8000/api/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      const res = await fetch("http://localhost:8000/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || 'Logout failed');
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || "Logout failed");
+      }
+
+      // ✅ Clear all role-specific tokens
+      localStorage.removeItem("admin");
+      localStorage.removeItem("teacher");
+      localStorage.removeItem("student");
+
+      navigate("/");
+      window.location.reload();
+    } catch (err) {
+      console.error("Logout error:", err.message);
+      alert(`Logout failed: ${err.message}`);
     }
-
-    // ✅ Clear all role-specific tokens
-    localStorage.removeItem('admin');
-    localStorage.removeItem('teacher');
-    localStorage.removeItem('student');
-
-    navigate('/');
-    window.location.reload();
-  } catch (err) {
-    console.error('Logout error:', err.message);
-    alert(`Logout failed: ${err.message}`);
-  }
-};
-
-
+  };
 
   return (
     <>
@@ -118,7 +124,7 @@ const Sidebar = () => {
           ref={sidebarRef}
           variants={Nav_animation}
           initial={isTabletMid ? { x: -250 } : { x: 0 }}
-          animate={open ? 'open' : 'closed'}
+          animate={open ? "open" : "closed"}
           className="bg-white text-gray z-[999] max-w-[16rem] w-[16rem] overflow-hidden md:relative fixed h-screen shadow-xl"
         >
           {/* Logo */}
@@ -128,7 +134,7 @@ const Sidebar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Replace with your actual logo/icon */}
+             <BookOpenIcon size={35} className="text-white"    />
             </motion.div>
             <AnimatePresence>
               {open && (
@@ -244,16 +250,18 @@ const Sidebar = () => {
                     to="/studentdashboard"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <LayoutDashboard size={26} />
+                    <LayoutDashboard size={30} />
                     {open && <span>Dashboard</span>}
                   </NavLink>
                 </motion.li>
 
-                <motion.li variants={itemVariants}>
+                {/* <motion.li variants={itemVariants}>
                   <NavLink
                     to="/courses"
                     className={({ isActive }) =>
@@ -265,18 +273,20 @@ const Sidebar = () => {
                     <Book size={26} />
                     {open && <span>Courses</span>}
                   </NavLink>
-                </motion.li>
+                </motion.li> */}
 
                 <motion.li variants={itemVariants}>
                   <NavLink
                     to="/studentattendance"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <CalendarClock size={26} />
+                    <CalendarClock size={30} />
                     {open && <span>Attendance</span>}
                   </NavLink>
                 </motion.li>
@@ -286,11 +296,13 @@ const Sidebar = () => {
                     to="/studentquiz"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <NotepadText size={26} />
+                    <NotepadText size={30} />
                     {open && <span>Quiz</span>}
                   </NavLink>
                 </motion.li>
@@ -300,14 +312,33 @@ const Sidebar = () => {
                     to="/assignment"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <Award size={26} />
+                    <Award size={30} />
                     {open && <span>Assignment</span>}
                   </NavLink>
                 </motion.li>
+
+                <motion.li variants={itemVariants}>
+                  <NavLink
+                    to="/analysis"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <ChartLine size={30} />
+                    {open && <span>Student Analysis</span>}
+                  </NavLink>
+                </motion.li>
+
 
                 <motion.li variants={itemVariants}>
                   <NavLink
@@ -318,26 +349,32 @@ const Sidebar = () => {
                     }}
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <MessageSquare size={26} />
+                    <MessageSquare size={30} />
                     {open && <span>Send Feedback</span>}
                   </NavLink>
                 </motion.li>
-                {isModalOpen && <Feedbackform onClose={() => setIsModalOpen(false)} />}
+                {isModalOpen && (
+                  <Feedbackform onClose={() => setIsModalOpen(false)} />
+                )}
 
                 <motion.li variants={itemVariants}>
                   <NavLink
                     to="/settings"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <Settings size={26} />
+                    <Settings size={30} />
                     {open && <span>Settings</span>}
                   </NavLink>
                 </motion.li>
@@ -364,11 +401,13 @@ const Sidebar = () => {
                     to="/teacherdashboard"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <LayoutDashboard size={26} />
+                    <LayoutDashboard size={30} />
                     {open && <span>Dashboard</span>}
                   </NavLink>
                 </motion.li>
@@ -378,11 +417,13 @@ const Sidebar = () => {
                     to="/dropout"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <UserX size={26} />
+                    <UserX size={30} />
                     {open && <span>Dropout Risk</span>}
                   </NavLink>
                 </motion.li>
@@ -392,12 +433,14 @@ const Sidebar = () => {
                     to="/stdperformance"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <CalendarClock size={26} />
-                    {open && <span>Attendance</span>}
+                    <ChartSpline size={30} />
+                    {open && <span>Student Performance</span>}
                   </NavLink>
                 </motion.li>
 
@@ -406,11 +449,13 @@ const Sidebar = () => {
                     to="/demands"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <ChartColumnBig size={26} />
+                    <ChartColumnBig size={30} />
                     {open && <span>Course Demand</span>}
                   </NavLink>
                 </motion.li>
@@ -420,25 +465,45 @@ const Sidebar = () => {
                     to="/feedbackteac"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <MessageSquare size={26} />
+                    <MessageSquare size={30} />
                     {open && <span>Feedback</span>}
                   </NavLink>
                 </motion.li>
 
                 <motion.li variants={itemVariants}>
                   <NavLink
-                    to="/settings"
+                    to="/stdhistory"
                     className={({ isActive }) =>
                       `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
-                        isActive ? 'sidebar-link-active font-bold' : 'hover:bg-gray-100'
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
                       }`
                     }
                   >
-                    <Settings size={26} />
+                    <History size={30} />
+                    {open && <span>Student History</span>}
+                  </NavLink>
+                </motion.li>
+
+                <motion.li variants={itemVariants}>
+                  <NavLink
+                    to="/settingteacher"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3.5 p-2.5 rounded-lg transition-all ${
+                        isActive
+                          ? "sidebar-link-active font-bold"
+                          : "hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <Settings size={30} />
                     {open && <span>Settings</span>}
                   </NavLink>
                 </motion.li>

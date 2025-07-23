@@ -2,17 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { DownloadIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import Loader from '../components/Custom/Loader';
 
 function Dropout_risk() {
   const [studentData, setStudentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const itemsPerCategory = 20; // 20 Low + 20 Medium + 20 High = 60 per page
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const studentRes = await axios.get("http://localhost:3001/dropout_risk_percentage");
         setStudentData(studentRes.data);
+        setLoading(false);
       } catch (err) {
         console.error("API Error:", err);
       }
@@ -20,7 +24,7 @@ function Dropout_risk() {
 
     fetchData();
   }, []);
-
+  if (loading || !studentData) return <Loader />;
   // Categorize students by risk
   const lowRiskStudents = studentData.filter(student => {
     const risk = Object.entries(student.estimated_dropout_risk_percentage).reduce(

@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { LineChartIcon, DownloadIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import Loader from '../components/Custom/Loader';
 
 function Stdperform() {
   const [predictionData, setPredictionData] = useState([]);
   const [studentData, setStudentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [perfSummaryRes, studentProbRes] = await Promise.all([
           axios.get("http://localhost:3001/performance_summary"),
@@ -21,6 +24,8 @@ function Stdperform() {
 
         setPredictionData(perfData);
         setStudentData(studentProbRes.data);
+        setLoading(false);
+        
       } catch (err) {
         console.error("API Error:", err);
       }
@@ -28,6 +33,9 @@ function Stdperform() {
 
     fetchData();
   }, []);
+
+  if (loading) return <Loader />;
+
 
   const total = predictionData.reduce((sum, item) => sum + item.student_count, 0);
   const getBarWidth = (count) => {
@@ -48,10 +56,10 @@ function Stdperform() {
         >
           <div className="flex items-center gap-2 mb-2">
             <LineChartIcon className="text-blue-500" size={20} />
-            <h2 className="text-2xl font-bold text-gray-800">Prediction Overview</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Student Predicted Performance</h2>
           </div>
           <p className="text-gray-600 mb-6">
-            Summary of predicted performance across students.
+            Overview of predicted performance across students.
           </p>
 
           <div className="space-y-4">
@@ -85,8 +93,8 @@ function Stdperform() {
           className="bg-white rounded-lg p-6 shadow-lg"
         >
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Detailed Predictions</h2>
-            <p className="text-gray-600">Individual student dropout risk predictions.</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Detailed Student Predicted Performance</h2>
+            <p className="text-gray-600">Individual Student Predicted Performance predictions.</p>
           </div>
 
           <div className="flex justify-between mb-6 relative">

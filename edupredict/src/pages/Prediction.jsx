@@ -117,8 +117,8 @@ function Prediction() {
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Student Name</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Course</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Risk Level</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-600">Dropout Risk</th>
+                  {/* <th className="text-left py-3 px-4 font-medium text-gray-600">Dropout Risk</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -153,7 +153,7 @@ function Prediction() {
                               {maxRisk}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-gray-800">{percentage}</td>
+                          {/* <td className="py-3 px-4 text-gray-800">{percentage}</td> */}
                         </motion.tr>
                       );
                     })}

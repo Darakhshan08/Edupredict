@@ -3,6 +3,7 @@ import { ResponsiveContainer, LineChart, Line, CartesianGrid, Tooltip, Legend, X
 import { motion } from "framer-motion";
 import { perform_attendance_trend_analysis } from "../../Api/internal";
 import GraphDropdown from "../Graph/GraphDropDown";
+import Loader from "../Custom/Loader";
 
 const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"];
 const CustomLegend = ({
@@ -38,7 +39,7 @@ export const Overview = () => {
     fetchdata();
   }, [days]);
   if (loading) {
-    return <>Loading....................</>;
+    return <Loader />;
   }
  
 

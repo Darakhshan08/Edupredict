@@ -10,11 +10,14 @@ import {
 } from "recharts";
 import { DownloadIcon } from "lucide-react";
 import axios from "axios";
+import Loader from "../components/Custom/Loader";
 
 function Quiz() {
   const [quizData, setQuizData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get("http://localhost:3001/quiz-summary")
       .then((res) => {
@@ -25,12 +28,14 @@ function Quiz() {
           score: item.quizzes_completed,
         }));
         setQuizData(formatted);
+        setLoading(false);
       })
+
       .catch((err) => {
         console.error("Failed to fetch quiz data:", err);
       });
   }, []);
-
+  if (loading || !quizData) return <Loader />;
   return (
     <div className="flex w-full min-h-screen justify-center items-center p-4">
       <div className="w-full max-w-7xl bg-white rounded-xl p-6 md:p-10 shadow-sm">
@@ -43,60 +48,59 @@ function Quiz() {
                   Quiz Performance
                 </h1>
                 <p className="text-sm md:text-base text-gray-500">
-                  Total quizzes
+                  Total quizzes Completed
                 </p>
               </div>
-              <div className="flex gap-3 w-full sm:w-auto">
+              {/* <div className="flex gap-3 w-full sm:w-auto">
                 <button className="flex items-center justify-center gap-2 px-4 py-2 border rounded-md bg-white text-gray-700 w-full sm:w-auto">
                   <DownloadIcon size={16} />
                   <span>Download</span>
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className="h-[300px] md:h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-  <BarChart
-    data={quizData}
-    margin={{ top: 20, right: 10, left: 0, bottom: 40 }}
-  >
-    <CartesianGrid
-      strokeDasharray="3 3"
-      vertical={false}
-      stroke="#eaeaea"
-    />
-    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-    <YAxis
-      domain={[0, 1000]}
-      ticks={[0, 200, 400, 600, 800, 1000]}
-      allowDecimals={false}
-      axisLine={false}
-      tickLine={false}
-      tick={{ fill: "#888", fontSize: 12 }}
-    />
-    <Tooltip
-      content={({ active, payload }) => {
-        if (active && payload && payload.length) {
-          return (
-            <div className="bg-white border shadow p-2 rounded text-sm text-gray-700">
-              <p className="font-semibold">
-                Course: {payload[0].payload.name}
-              </p>
-              <p>Total quizzes: {payload[0].payload.total}</p>
-            </div>
-          );
-        }
-        return null;
-      }}
-    />
-    <Bar
-      dataKey="score"
-      fill="#a78bfa"
-      radius={[4, 4, 0, 0]}
-      barSize={100}
-    />
-  </BarChart>
-</ResponsiveContainer>
-
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={quizData}
+                  margin={{ top: 20, right: 10, left: 0, bottom: 40 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#eaeaea"
+                  />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                  <YAxis
+                    domain={[0, 1000]}
+                    ticks={[0, 200, 400, 600, 800, 1000]}
+                    allowDecimals={false}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "#888", fontSize: 12 }}
+                  />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-white border shadow p-2 rounded text-sm text-gray-700">
+                            <p className="font-semibold">
+                              Course: {payload[0].payload.name}
+                            </p>
+                            <p>Total quizzes: {payload[0].payload.total}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar
+                    dataKey="score"
+                    fill="#a78bfa"
+                    radius={[4, 4, 0, 0]}
+                    barSize={100}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
