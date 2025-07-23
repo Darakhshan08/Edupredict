@@ -5,7 +5,7 @@ import { perform_attendance_trend_analysis } from "../../Api/internal";
 import GraphDropdown from "../Graph/GraphDropDown";
 import Loader from "../Custom/Loader";
 
-const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"];
+const COLORS = ["#4F75FF", "#00D7FF", "#F59E0B", "#EF4444"];
 const CustomLegend = ({
   items
 }) => {
@@ -21,8 +21,8 @@ const CustomLegend = ({
 export const Overview = () => {
   
    const legendItems = [
-    { name: "Actual", color: "#82ca9d" },
-    { name: "Predicted", color: "#8884d8" },
+    { name: "Actual", color: "#4F75FF" },
+    { name: "Predicted", color: "#00D7FF" },
   ];
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);

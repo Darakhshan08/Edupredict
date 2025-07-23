@@ -95,7 +95,7 @@ function Quiz() {
                   />
                   <Bar
                     dataKey="score"
-                    fill="#a78bfa"
+                    fill="#4F75FF"
                     radius={[4, 4, 0, 0]}
                     barSize={100}
                   />

@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import StudentTop from "../components/Tabs/StudentTop";
-import { useNavigate } from 'react-router-dom';
-import { student_data } from "../Api/internal";
+import { useNavigate } from "react-router-dom";
+import { teacher_analysis } from "../Api/internal";
 import Loader from "../components/Custom/Loader";
+
 const StudentDashboard = () => {
+  const navigate = useNavigate();
+  const [courseData, setCourseData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await teacher_analysis();
+      if (res.status == 200) {
+        setCourseData(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // const [loading, setLoading] = useState(false);
-  // const [data, setData] = useState(null);
-  // const student_id = localStorage.getItem("student");
-  // const fetchData = async (id) => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await student_data(id);
-  //     if (res.status == 200) {
-  //       setData(res.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  //   setLoading(false);
-  // };
-  // useEffect(() => {
-  //   fetchData(student_id);
-  // }, []);
-  // if (loading) {
-  //   return <Loader />;
-  // }
-  // if (!student_id) {
-  //   header("/");
-  // }
-
-
+  if (loading || courseData == null) {
+    return <Loader />;
+  }
+ 
 
   const containerVariants = {
     hidden: {
@@ -62,9 +59,10 @@ const StudentDashboard = () => {
   };
   const courses = ["Mathematics", "Science", "English"];
   const assignments = ["C101", "C102", "C103"];
-  const navigate = useNavigate();
+
 
   return (
+    <>
     <motion.div
       className="p-4"
       variants={containerVariants}
@@ -78,10 +76,7 @@ const StudentDashboard = () => {
         <p className="mb-6 text-gray-600">Welcome to your student dashboard!</p>
       </motion.div>
 
-
-   <StudentTop />
-
-
+      <StudentTop data={courseData.summary_metrics}  />
 
       <motion.div
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
@@ -219,10 +214,7 @@ const StudentDashboard = () => {
                   ></div>
                   <span className="font-medium">{assignment}</span>
                 </div>
-                <div className="flex items-center">
-                  
-               
-                </div>
+                <div className="flex items-center"></div>
               </motion.li>
             ))}
           </ul>
@@ -238,14 +230,14 @@ const StudentDashboard = () => {
               delay: 0.5,
             }}
           >
-              <motion.button
-      className="w-full px-4 py-2 bg-amber-50 text-amber-600 rounded-md hover:bg-amber-100 transition-colors duration-200 text-sm font-medium"
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
-      onClick={() => navigate('/studentquiz')} // update route as needed
-    >
-      View All Assignments
-    </motion.button>
+            <motion.button
+              className="w-full px-4 py-2 bg-amber-50 text-amber-600 rounded-md hover:bg-amber-100 transition-colors duration-200 text-sm font-medium"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => navigate("/studentquiz")} // update route as needed
+            >
+              View All Assignments
+            </motion.button>
           </motion.div>
         </motion.div>
         <motion.div
@@ -308,6 +300,7 @@ const StudentDashboard = () => {
         </motion.div>
       </motion.div>
     </motion.div>
+    </>
   );
 };
 export default StudentDashboard;

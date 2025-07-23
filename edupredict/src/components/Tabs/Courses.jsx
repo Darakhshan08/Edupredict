@@ -12,7 +12,7 @@ import {
 import { motion } from "framer-motion";
 import { attendance_course_performance } from "../../Api/internal";
 import Loader from "../Custom/Loader";
-const COLORS = ["#4F46E5", "#5db095", "#F59E0B", "#EF4444"];
+const COLORS = ["#4F75FF", "#0096FF", "#00D7FF", "#EF4444"];
 export const Courses = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -77,9 +77,9 @@ export const Courses = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="present" fill="#00C49F" />
-                <Bar dataKey="late" fill="#FFBB28" />
-                <Bar dataKey="absent" fill="#FF8042" />
+                <Bar dataKey="present" fill="#4F75FF" />
+                <Bar dataKey="late" fill="#0096FF" />
+                <Bar dataKey="absent" fill="#00D7FF" />
               </BarChart>
             ) : (
               <p>📉 No data available for chart.</p>

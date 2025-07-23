@@ -71,7 +71,7 @@ function Stdperform() {
                     className={`absolute left-0 top-0 h-full rounded transition-all duration-300`}
                     style={{
                       width: getBarWidth(item.student_count),
-                      backgroundColor: ["#578FCA", "#0096FF", "#00CCDD", "#66D7D1"][idx % 4]
+                      backgroundColor: ["#4F75FF", "#0096FF","#66D7D1","#00D7FF"][idx % 4]
                     }}
                   ></div>
                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-gray-700">

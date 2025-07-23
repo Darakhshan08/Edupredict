@@ -92,8 +92,8 @@ function StudentAttendance() {
                   tickLine={false}
                 />
                 <Tooltip />
-                <Bar dataKey="present" fill="#b389f7" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="absent" fill="#e9b6e0" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="present" fill="#4F75FF" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="absent" fill="#00D7FF" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

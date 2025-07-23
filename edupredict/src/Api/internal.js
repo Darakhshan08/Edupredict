@@ -202,3 +202,12 @@ export const dropout_risk_by_course = async () => {
   }
   return response;
 };
+export const course_demand = async () => {
+  let response;
+  try {
+    response = await api.get(`/course_demand`);
+  } catch (error) {
+    return error;
+  }
+  return response;
+};

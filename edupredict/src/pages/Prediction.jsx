@@ -42,8 +42,8 @@ function Prediction() {
   };
 
   return (
-    <div className="rounded-lg p-4 min-h-screen w-full md:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="rounded-lg p-4 min-h-screen w-full md:p-8 ">
+      <div className="max-w-7xl mx-auto space-y-6 ">
 
         {/* ✅ Prediction Overview with Dynamic Custom Bar Chart */}
         <motion.div
@@ -67,10 +67,10 @@ function Prediction() {
                   <div
                     className={`absolute left-0 top-0 h-full rounded transition-all duration-300 ${
                       level === "Low"
-                        ? "bg-[#578FCA]"
+                        ? "bg-[#4F75FF]"
                         : level === "Medium"
                         ? "bg-[#0096FF]"
-                        : "bg-[#00CCDD]"
+                        : "bg-[#00D7FF]"
                     }`}
                     style={{ width: getBarWidth(predictionData[level]) }}
                   ></div>
