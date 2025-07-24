@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { LineChartIcon, DownloadIcon, ChevronDownIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import Loader from '../components/Custom/Loader';
 
 function Prediction() {
   const [predictionData, setPredictionData] = useState({ Low: 0, Medium: 0, High: 0 });
   const [studentData, setStudentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+   const [loading, setLoading] = useState(false);
   const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
+        
         const [riskRes, studentRes] = await Promise.all([
           axios.get("http://localhost:3001/dropout_risk_by_course"),
           axios.get("http://localhost:3001/dropout_risk_percentage")
@@ -27,6 +31,7 @@ function Prediction() {
 
         setPredictionData(grouped);
         setStudentData(studentRes.data);
+        setLoading(false);
       } catch (err) {
         console.error("API Error:", err);
       }
@@ -34,7 +39,7 @@ function Prediction() {
 
     fetchData();
   }, []);
-
+if(loading || !predictionData) return <Loader />
   const total = predictionData.Low + predictionData.Medium + predictionData.High;
   const getBarWidth = (count) => {
     if (total === 0) return "0%";
