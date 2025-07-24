@@ -57,7 +57,7 @@ const StudentDashboard = () => {
       },
     },
   };
-  const courses = ["Mathematics", "Science", "English"];
+  const courses = ["AI", "Data Science", "Web Development"];
   const assignments = ["C101", "C102", "C103"];
 
 
